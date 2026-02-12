@@ -49,6 +49,7 @@ next-env.d.ts
 
 #temp folder
 /temp
+tet.txt
 
 # AI config files
 /.cursor

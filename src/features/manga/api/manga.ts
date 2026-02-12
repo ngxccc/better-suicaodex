@@ -1,4 +1,3 @@
-import { axiosWithProxy } from "../axios";
 import type {
   Artist,
   Author,
@@ -8,7 +7,6 @@ import type {
   MangaStats,
   Tag,
 } from "@/types/types";
-import { ChaptersParser } from "./chapter";
 import { siteConfig } from "@/config/site";
 import type { MangaDexApiResponse } from "@/types/mangadex-api";
 import type {
@@ -17,8 +15,10 @@ import type {
   MangaData,
   MangaTag,
   Relationship,
-} from "@/types/manga";
-import { cacheRequest } from "../cache-utils";
+} from "@/features/manga/types";
+import { axiosWithProxy } from "@/lib/axios";
+import { ChaptersParser } from "@/lib/mangadex/chapter";
+import { cacheRequest } from "@/lib/cache-utils";
 
 function getPreferredTitle(
   titles: Record<string, string>,
@@ -67,7 +67,7 @@ function getCreators(
 function getTags(rawTags: MangaTag[]): Tag[] {
   return rawTags.map((tag) => ({
     id: tag.id,
-    name: tag.attributes.name.en || "Unknown",
+    name: tag.attributes.name.en ?? "Unknown",
     group: tag.attributes.group,
   }));
 }
@@ -357,8 +357,8 @@ export async function FirstChapters(
     method: "get",
     params: {
       manga: id,
-      volume: volume || "none",
-      chapter: chapter || "none",
+      volume: volume ?? "none",
+      chapter: chapter ?? "none",
       limit: 100,
       contentRating: r18
         ? ["safe", "suggestive", "erotica", "pornographic"]

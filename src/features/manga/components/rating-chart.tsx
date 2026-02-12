@@ -1,8 +1,9 @@
 "use client";
 
 import { Bar, BarChart, XAxis, YAxis } from "recharts";
-import { ChartConfig, ChartContainer } from "@/components/ui/chart";
-import { MangaStats } from "@/types/types";
+import type { ChartConfig } from "@/components/ui/chart";
+import { ChartContainer } from "@/components/ui/chart";
+import type { MangaStats } from "@/types/types";
 import millify from "millify";
 
 interface RatingStats {

@@ -29,9 +29,9 @@ const StatusChip = ({ status, isLink = false }: StatusChipProps) => {
 
   return (
     <NormalTag
-      className={`uppercase bg-default ${statusTextColor} outline-solid outline-2 -outline-offset-2 ${statusOutline} w-fit`}
+      className={`bg-default uppercase ${statusTextColor} outline-2 -outline-offset-2 outline-solid ${statusOutline} w-fit`}
     >
-      <span className={`${statusBg} rounded-full w-2 h-2`} />
+      <span className={`${statusBg} h-2 w-2 rounded-full`} />
       {isLink ? (
         <a
           href={`/advanced-search?status=${status}`}

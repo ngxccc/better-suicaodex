@@ -6,7 +6,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { getChapterDetail } from "@/lib/mangadex/chapter";
 import useSWR from "swr";
 import ChapterNotFound from "./chapter-notfound";
-import MangaMaintain from "@/components/Manga/manga-maintain";
+import MangaMaintain from "@/features/manga/components/manga-maintain";
 import useReadingHistory from "@/hooks/use-reading-history";
 import { useEffect } from "react";
 import { cn } from "@/lib/utils";
@@ -67,9 +67,9 @@ export default function ChapterPage({ id, initialData }: ChapterProps) {
   if (isLoading || !data)
     return (
       <div className="grid grid-cols-1 gap-2 pb-2">
-        <Skeleton className="w-1/2 md:w-1/5 h-5 bg-gray-500 rounded-sm" />
-        <Skeleton className="w-3/4 md:w-1/3 h-5 bg-gray-500 rounded-sm" />
-        <Skeleton className="w-1/4 h-5 bg-gray-500 rounded-sm" />
+        <Skeleton className="h-5 w-1/2 rounded-sm bg-gray-500 md:w-1/5" />
+        <Skeleton className="h-5 w-3/4 rounded-sm bg-gray-500 md:w-1/3" />
+        <Skeleton className="h-5 w-1/4 rounded-sm bg-gray-500" />
       </div>
     );
 

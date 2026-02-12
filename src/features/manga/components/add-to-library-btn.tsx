@@ -13,7 +13,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { useConfig } from "@/hooks/use-config";
 import { cn, getCoverImageUrl } from "@/lib/utils";
-import { LibraryType, Manga } from "@/types/types";
+import type { LibraryType, Manga } from "@/types/types";
 import {
   Album,
   BellOff,
@@ -176,7 +176,7 @@ export default function AddToLibraryBtn({ manga }: AddToLibraryBtnProps) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="rounded-sm size-9 md:h-10 md:w-auto md:px-6 md:has-[>svg]:px-4">
+        <Button className="size-9 rounded-sm md:h-10 md:w-auto md:px-6 md:has-[>svg]:px-4">
           {options.find((opt) => opt.value === value)?.icon}
           <span className="hidden md:block">
             {options.find((opt) => opt.value === value)?.btnLabel}
@@ -185,7 +185,7 @@ export default function AddToLibraryBtn({ manga }: AddToLibraryBtnProps) {
       </DialogTrigger>
       <DialogContent
         className={cn(
-          "sm:max-w-[800px] sm:max-h-[calc(100vh-3rem)] overflow-auto",
+          "overflow-auto sm:max-h-[calc(100vh-3rem)] sm:max-w-[800px]",
           `theme-${config.theme}`,
         )}
         onOpenAutoFocus={(e) => e.preventDefault()}
@@ -194,7 +194,7 @@ export default function AddToLibraryBtn({ manga }: AddToLibraryBtnProps) {
           <DialogTitle>Thêm vào thư viện</DialogTitle>
           <DialogDescription className="hidden">mẹ mày béo</DialogDescription>
         </DialogHeader>
-        <div className="flex flex-col sm:flex-row gap-4">
+        <div className="flex flex-col gap-4 sm:flex-row">
           <div className="flex flex-row gap-4">
             <LazyLoadImage
               wrapperClassName={cn(
@@ -203,7 +203,7 @@ export default function AddToLibraryBtn({ manga }: AddToLibraryBtnProps) {
               )}
               placeholderSrc="/images/place-doro.webp"
               className={cn(
-                "h-auto w-full rounded-sm block object-cover shadow-md drop-shadow-md aspect-5/7",
+                "block aspect-5/7 h-auto w-full rounded-sm object-cover shadow-md drop-shadow-md",
               )}
               src={src}
               alt={`Ảnh bìa ${manga.title}`}
@@ -213,12 +213,12 @@ export default function AddToLibraryBtn({ manga }: AddToLibraryBtnProps) {
               }}
             />
 
-            <div className="flex flex-col gap-4 w-full">
-              <p className="font-bold text-2xl line-clamp-4 sm:line-clamp-2">
+            <div className="flex w-full flex-col gap-4">
+              <p className="line-clamp-4 text-2xl font-bold sm:line-clamp-2">
                 {manga.title}
               </p>
 
-              <div className="hidden sm:flex flex-row gap-2 w-full">
+              <div className="hidden w-full flex-row gap-2 sm:flex">
                 <Select
                   value={value}
                   onValueChange={(v) => setValue(v as LibraryType | "none")}
@@ -248,7 +248,7 @@ export default function AddToLibraryBtn({ manga }: AddToLibraryBtnProps) {
                         ? "default"
                         : "outline"
                   }
-                  className="shrink-0 size-10 [&_svg]:size-5"
+                  className="size-10 shrink-0 [&_svg]:size-5"
                   onClick={() => setIsNotificationEnabled((prev) => !prev)}
                   disabled={value === "none"}
                 >
@@ -264,7 +264,7 @@ export default function AddToLibraryBtn({ manga }: AddToLibraryBtnProps) {
               <Label className="hidden sm:block" htmlFor="note">
                 Hướng dẫn:
               </Label>
-              <div className="hidden sm:block -mt-2 text-base text-muted-foreground">
+              <div className="text-muted-foreground -mt-2 hidden text-base sm:block">
                 <p>- Chọn 1 trong các danh mục trên để thêm truyện.</p>
                 <p>
                   - Chọn{" "}
@@ -276,8 +276,8 @@ export default function AddToLibraryBtn({ manga }: AddToLibraryBtnProps) {
             </div>
           </div>
 
-          <div className="sm:hidden flex flex-col gap-4 w-full">
-            <div className="flex flex-row gap-2 w-full">
+          <div className="flex w-full flex-col gap-4 sm:hidden">
+            <div className="flex w-full flex-row gap-2">
               <Select
                 value={value}
                 onValueChange={(v) => setValue(v as LibraryType | "none")}
@@ -307,7 +307,7 @@ export default function AddToLibraryBtn({ manga }: AddToLibraryBtnProps) {
                       ? "default"
                       : "outline"
                 }
-                className="shrink-0 size-10 [&_svg]:size-5"
+                className="size-10 shrink-0 [&_svg]:size-5"
                 onClick={() => setIsNotificationEnabled((prev) => !prev)}
                 disabled={value === "none"}
               >
@@ -321,7 +321,7 @@ export default function AddToLibraryBtn({ manga }: AddToLibraryBtnProps) {
               </Button>
             </div>
             <Label htmlFor="note">Hướng dẫn:</Label>
-            <div className="-mt-2 text-base text-muted-foreground">
+            <div className="text-muted-foreground -mt-2 text-base">
               <p>- Chọn 1 trong các danh mục trên để thêm truyện.</p>
               <p>
                 - Chọn <span className="font-semibold">&quot;Không&quot;</span>{" "}
@@ -332,7 +332,7 @@ export default function AddToLibraryBtn({ manga }: AddToLibraryBtnProps) {
           </div>
         </div>
 
-        <DialogFooter className="justify-end flex flex-col-reverse sm:flex-row gap-2 space-x-0!">
+        <DialogFooter className="flex flex-col-reverse justify-end gap-2 space-x-0! sm:flex-row">
           <DialogClose asChild>
             <Button
               variant="secondary"

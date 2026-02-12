@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { buttonVariants } from "../ui/button";
+import { buttonVariants } from "../../../components/ui/button";
 import Banner from "./manga-banner";
 import { cn } from "@/lib/utils";
 import ShutUp from "#/images/shutup.webp";
@@ -14,20 +14,20 @@ export default function MangaNotFound() {
           <Image
             src={ShutUp}
             alt="404"
-            className="w-[130px] md:w-[200px] h-auto rounded-sm drop-shadow-md shadow-md"
+            className="h-auto w-[130px] rounded-sm shadow-md drop-shadow-md md:w-[200px]"
             priority
             quality={100}
           />
         </div>
 
-        <p className="uppercase font-black text-3xl drop-shadow-lg text-center">
+        <p className="text-center text-3xl font-black uppercase drop-shadow-lg">
           Truyện bạn đang tìm không tồn tại!
         </p>
         <Link
           href="/"
           className={cn(
             buttonVariants({ size: "lg", variant: "secondary" }),
-            "text-base"
+            "text-base",
           )}
         >
           Quay lại trang chủ

@@ -1,8 +1,8 @@
 import type { Chapter, Manga } from "@/types/types";
-import { axiosWithProxy } from "../axios";
 import { ChaptersParser } from "./chapter";
-import { MangaParser } from "./manga";
 import { cacheRequest } from "../cache-utils";
+import { axiosWithProxy } from "../axios";
+import { MangaParser } from "@/features/manga/api/manga";
 
 export async function getLatestChapters(
   max: number,

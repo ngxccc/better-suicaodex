@@ -1,7 +1,7 @@
 "use client";
 
 import { useConfig } from "@/hooks/use-config";
-import { getStaffPickMangas } from "@/lib/mangadex/manga";
+import { getStaffPickMangas } from "@/features/manga/api/manga";
 import useSWR from "swr";
 import { Skeleton } from "@/components/ui/skeleton";
 import RecentlyCard from "../Recently/recently-card";
@@ -64,14 +64,14 @@ export default function StaffPick() {
   return (
     <div className="flex flex-col">
       <div>
-        <hr className="w-9 h-1 bg-primary border-none" />
+        <hr className="bg-primary h-1 w-9 border-none" />
         <h1 className="text-2xl font-black uppercase">Truyện đề cử</h1>
       </div>
 
       <div
         ref={contentRef}
         className={cn(
-          "mt-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3",
+          "mt-4 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4",
           "overflow-hidden transition-all duration-500",
         )}
         style={{
@@ -93,11 +93,11 @@ export default function StaffPick() {
       </div>
 
       <div
-        className={cn("flex justify-center w-full h-full", expanded && "mt-2")}
+        className={cn("flex h-full w-full justify-center", expanded && "mt-2")}
       >
         <Button
           size="sm"
-          className="h-4 px-1! text-xs rounded-sm"
+          className="h-4 rounded-sm px-1! text-xs"
           onClick={toggleExpanded}
           variant={expanded ? "secondary" : "default"}
         >

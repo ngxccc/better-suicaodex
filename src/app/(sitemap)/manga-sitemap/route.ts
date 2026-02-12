@@ -1,11 +1,11 @@
-import { getTotalMangas } from "@/lib/mangadex/manga";
+import { getTotalMangas } from "@/features/manga/api/manga";
 import { getServerSideSitemapIndex } from "next-sitemap";
 
 export async function GET(req: Request) {
   const count = await getTotalMangas();
 
   const context = Array.from(Array(Math.ceil(count / 100)).keys()).map(
-    (_, index) => `${process.env.SITEMAP_URL}/manga-sitemap-${index}.xml`
+    (_, index) => `${process.env.SITEMAP_URL}/manga-sitemap-${index}.xml`,
   );
 
   const siteMap = await (

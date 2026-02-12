@@ -9,7 +9,7 @@ import { GB, VN } from "country-flag-icons/react/3x2";
 import { Check, Clock, Users } from "lucide-react";
 import { Button } from "../ui/button";
 import { useLocalNotification } from "@/hooks/use-local-notification";
-import MangaCover from "../Manga/manga-cover";
+import MangaCover from "../../features/manga/components/manga-cover";
 import NoPrefetchLink from "../Custom/no-prefetch-link";
 
 interface UnreadCardProps {
@@ -21,7 +21,7 @@ export default function UnreadCard({ chapter }: UnreadCardProps) {
   const router = useRouter();
   const { markAsRead } = useLocalNotification();
   return (
-    <Card className="rounded-sm shadow-xs transition-colors duration-200 w-full">
+    <Card className="w-full rounded-sm shadow-xs transition-colors duration-200">
       <CardContent className="flex gap-1.5 p-1 md:p-1.5">
         <NoPrefetchLink href={`/manga/${chapter.manga.id}`}>
           <MangaCover
@@ -30,48 +30,48 @@ export default function UnreadCard({ chapter }: UnreadCardProps) {
             alt={chapter.manga.title || ""}
             placeholder="/images/place-doro.webp"
             wrapper="w-20 h-auto border"
-            className="w-20! h-[75px]! md:h-[77.5px]! object-cover!"
+            className="h-[75px]! w-20! object-cover! md:h-[77.5px]!"
             quality="256"
             // quality={isMobile ? "256" : "512"}
           />
         </NoPrefetchLink>
-        <div className="flex flex-col gap-0 w-full">
-          <div className="w-full flex flex-row items-center justify-between border-b pb-1 md:pb-1.5">
+        <div className="flex w-full flex-col gap-0">
+          <div className="flex w-full flex-row items-center justify-between border-b pb-1 md:pb-1.5">
             <NoPrefetchLink
               href={`/manga/${chapter.manga.id}`}
-              className="font-bold line-clamp-1 break-all"
+              className="line-clamp-1 font-bold break-all"
             >
               {chapter.manga.title}
             </NoPrefetchLink>
             <Button
               size="sm"
               variant="ghost"
-              className="h-6 px-2! md:px-3! whitespace-normal!  flex shrink! text-xs"
+              className="flex h-6 shrink! px-2! text-xs whitespace-normal! md:px-3!"
               onClick={() => markAsRead(chapter.id)}
             >
               <Check />
-              <span className="break-all! line-clamp-1">Đã đọc</span>
+              <span className="line-clamp-1 break-all!">Đã đọc</span>
             </Button>
           </div>
 
-          <div className="py-1 px-1 w-full hover:bg-secondary">
+          <div className="hover:bg-secondary w-full px-1 py-1">
             <NoPrefetchLink
-              className="flex flex-col gap-1 w-full"
+              className="flex w-full flex-col gap-1"
               href={`/chapter/${chapter.id}`}
             >
-              <div className="items-center flex gap-1">
+              <div className="flex items-center gap-1">
                 {chapter.language === "vi" ? (
                   <VN className="size-4 shrink-0" />
                 ) : (
                   <GB className="size-4 shrink-0" />
                 )}
-                <span className="font-bold text-sm">{title}</span>
+                <span className="text-sm font-bold">{title}</span>
               </div>
               <div className="flex justify-between">
                 <div className="flex items-center justify-self-start">
                   <Users size={15} className="shrink-0" />
                   {chapter.group.length === 0 ? (
-                    <span className="line-clamp-1 font-normal text-xs px-1">
+                    <span className="line-clamp-1 px-1 text-xs font-normal">
                       No Group
                     </span>
                   ) : (
@@ -80,7 +80,7 @@ export default function UnreadCard({ chapter }: UnreadCardProps) {
                         <Button
                           key={group.id}
                           variant="ghost"
-                          className="whitespace-normal! text-xs font-normal text-start line-clamp-1 rounded-sm h-4 py-0 px-1 hover:underline hover:text-primary break-all! shrink!"
+                          className="hover:text-primary line-clamp-1 h-4 shrink! rounded-sm px-1 py-0 text-start text-xs font-normal break-all! whitespace-normal! hover:underline"
                           size="sm"
                           onClick={(e: React.MouseEvent) => {
                             e.preventDefault();
@@ -94,9 +94,9 @@ export default function UnreadCard({ chapter }: UnreadCardProps) {
                     </div>
                   )}
                 </div>
-                <div className="flex items-center space-x-1 w-full max-w-max justify-end pr-1">
+                <div className="flex w-full max-w-max items-center justify-end space-x-1 pr-1">
                   <time
-                    className="text-xs font-light line-clamp-1 break-all"
+                    className="line-clamp-1 text-xs font-light break-all"
                     dateTime={new Date(chapter.updatedAt).toDateString()}
                   >
                     {formatTimeToNow(new Date(chapter.updatedAt))}

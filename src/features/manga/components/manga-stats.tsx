@@ -1,15 +1,19 @@
 "use client";
 
-import { MangaStats } from "@/types/types";
-import { FC } from "react";
+import type { MangaStats } from "@/types/types";
+import type { FC } from "react";
 import { Bookmark, MessageSquare, Star } from "lucide-react";
 import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
-} from "../ui/hover-card";
+} from "../../../components/ui/hover-card";
 import { RatingChart } from "./rating-chart";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "../../../components/ui/popover";
 import { useConfig } from "@/hooks/use-config";
 import { cn, formatNumber } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -28,13 +32,13 @@ export const MangaStatsComponent: FC<MangaStatsProps> = ({ stats, size }) => {
       {isMobile ? (
         <Popover>
           <PopoverTrigger asChild>
-            <span className="flex items-center gap-1 text-sm cursor-pointer text-primary drop-shadow-md">
+            <span className="text-primary flex cursor-pointer items-center gap-1 text-sm drop-shadow-md">
               <Star size={16} />
               <span>{stats.rating.bayesian.toFixed(2)}</span>
             </span>
           </PopoverTrigger>
           <PopoverContent
-            className={cn("w-80 py-2 px-0", `theme-${config.theme}`)}
+            className={cn("w-80 px-0 py-2", `theme-${config.theme}`)}
           >
             <RatingChart stats={stats} />
           </PopoverContent>
@@ -44,15 +48,15 @@ export const MangaStatsComponent: FC<MangaStatsProps> = ({ stats, size }) => {
           <HoverCardTrigger asChild>
             <span
               className={cn(
-                "flex items-center gap-1 cursor-pointer text-primary drop-shadow-md",
-                size === "sm" ? "text-sm" : "text-base"
+                "text-primary flex cursor-pointer items-center gap-1 drop-shadow-md",
+                size === "sm" ? "text-sm" : "text-base",
               )}
             >
               <Star size={size === "sm" ? 16 : 18} />
               <span>{stats.rating.bayesian.toFixed(2)}</span>
             </span>
           </HoverCardTrigger>
-          <HoverCardContent className="w-80 py-2 px-0 rounded-md">
+          <HoverCardContent className="w-80 rounded-md px-0 py-2">
             <RatingChart stats={stats} />
           </HoverCardContent>
         </HoverCard>
@@ -61,7 +65,7 @@ export const MangaStatsComponent: FC<MangaStatsProps> = ({ stats, size }) => {
       <span
         className={cn(
           "flex items-center gap-1 drop-shadow-md",
-          size === "sm" ? "text-sm" : "text-base"
+          size === "sm" ? "text-sm" : "text-base",
         )}
       >
         <Bookmark size={size === "sm" ? 16 : 18} />
@@ -71,7 +75,7 @@ export const MangaStatsComponent: FC<MangaStatsProps> = ({ stats, size }) => {
         <span
           className={cn(
             "flex items-center gap-1 drop-shadow-md",
-            size === "sm" ? "text-sm" : "text-base"
+            size === "sm" ? "text-sm" : "text-base",
           )}
         >
           <MessageSquare size={size === "sm" ? 16 : 18} />

@@ -22,28 +22,28 @@ export default function Banner({ id, src }: BannerProps) {
 
       {/* <div className="absolute top-70 left-0 z-[-1] w-full min-h-screen bg-background"></div> */}
 
-      <div className="absolute h-70 z-[-2] w-auto left-0 right-0 top-0 block">
+      <div className="absolute top-0 right-0 left-0 z-[-2] block h-70 w-auto">
         <div
           className={cn(
             "absolute h-70 w-full",
             "transition-[width] duration-150 ease-in-out",
-            "bg-no-repeat bg-cover bg-position-[center_top_33%] md:bg-fixed"
+            "bg-cover bg-position-[center_top_33%] bg-no-repeat md:bg-fixed",
           )}
           style={{ backgroundImage: `url('${coverURL}')` }}
         ></div>
         <div
           className={cn(
-            "absolute h-70 w-auto inset-0 pointer-events-none",
+            "pointer-events-none absolute inset-0 h-70 w-auto",
             "backdrop-blur-none md:backdrop-blur-xs",
-            "bg-linear-to-r from-background/65 to-transparent"
+            "from-background/65 bg-linear-to-r to-transparent",
           )}
         ></div>
 
         <div
           className={cn(
             "md:hidden",
-            "absolute h-70 w-auto inset-0 pointer-events-none backdrop-blur-[1px]",
-            "bg-linear-to-b from-background/5 to-background"
+            "pointer-events-none absolute inset-0 h-70 w-auto backdrop-blur-[1px]",
+            "from-background/5 to-background bg-linear-to-b",
           )}
         ></div>
       </div>

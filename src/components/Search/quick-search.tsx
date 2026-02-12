@@ -5,9 +5,8 @@ import { Button } from "../ui/button";
 import { ArrowRight, Search, X } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Input } from "../ui/input";
-import { SearchManga } from "@/lib/mangadex/manga";
 import { useConfig } from "@/hooks/use-config";
-import { Manga } from "@/types/types";
+import type { Manga } from "@/types/types";
 import CompactCard from "./Result/compact-card";
 import Link from "next/link";
 import { Skeleton } from "../ui/skeleton";
@@ -23,6 +22,7 @@ import {
 } from "../ui/dialog";
 import useKeyDown from "@/hooks/use-keydown";
 import { Badge } from "../ui/badge";
+import { SearchManga } from "@/features/manga/api/manga";
 
 export default function QuickSearch() {
   const [expanded, setExpanded] = useState(false);
@@ -53,7 +53,7 @@ export default function QuickSearch() {
         setIsLoading(false);
       }
     },
-    [config.r18]
+    [config.r18],
   );
 
   const debouncedSearch = useCallback(
@@ -68,7 +68,7 @@ export default function QuickSearch() {
         }
       }, 500);
     },
-    [handleSearch]
+    [handleSearch],
   );
 
   useEffect(() => {
@@ -165,19 +165,19 @@ export default function QuickSearch() {
   return (
     <>
       <div
-        className={cn("hidden md:flex relative grow justify-end z-10")}
+        className={cn("relative z-10 hidden grow justify-end md:flex")}
         ref={containerRef}
       >
         <div className="w-full">
-          <div className="flex items-center w-full justify-end space-y-0">
+          <div className="flex w-full items-center justify-end space-y-0">
             <Input
               autoComplete="off"
               placeholder="Tìm kiếm..."
               className={cn(
-                "bg-muted/50! hover:bg-accent! focus:bg-background! border-none h-8 shadow-xs",
+                "bg-muted/50! hover:bg-accent! focus:bg-background! h-8 border-none shadow-xs",
                 "transition-all sm:pr-12 md:w-40 lg:w-56 xl:w-64",
                 "placeholder:text-current",
-                expanded && "shadow-md! bg-background md:w-full! lg:w-2/3!"
+                expanded && "bg-background shadow-md! md:w-full! lg:w-2/3!",
               )}
               value={searchTerm}
               onChange={handleInputChange}
@@ -186,22 +186,22 @@ export default function QuickSearch() {
               ref={inputRef}
             />
             {searchTerm.length === 0 ? (
-              <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex space-x-2 items-center">
+              <div className="absolute top-1/2 right-2 flex -translate-y-1/2 transform items-center space-x-2">
                 <div
                   className={cn(
-                    "hidden lg:flex flex-row gap-1",
-                    expanded && "hidden!"
+                    "hidden flex-row gap-1 lg:flex",
+                    expanded && "hidden!",
                   )}
                 >
                   <Badge
                     variant="default"
-                    className="px-1 py-0 bg-primary/40 hover:bg-primary/40 rounded-sm"
+                    className="bg-primary/40 hover:bg-primary/40 rounded-sm px-1 py-0"
                   >
                     Ctrl
                   </Badge>
                   <Badge
                     variant="default"
-                    className="px-1 py-0 bg-primary/40 hover:bg-primary/40 rounded-sm"
+                    className="bg-primary/40 hover:bg-primary/40 rounded-sm px-1 py-0"
                   >
                     K
                   </Badge>
@@ -210,7 +210,7 @@ export default function QuickSearch() {
               </div>
             ) : (
               <Button
-                className="absolute right-2 top-1/2 transform -translate-y-1/2 h-4 w-4 bg-primary rounded-sm"
+                className="bg-primary absolute top-1/2 right-2 h-4 w-4 -translate-y-1/2 transform rounded-sm"
                 size="icon"
                 onClick={clearSearch}
                 type="button"
@@ -226,8 +226,8 @@ export default function QuickSearch() {
           <div
             id="expanded"
             className={cn(
-              "absolute top-full mt-1 md:w-full lg:w-2/3 bg-background p-2 rounded-lg shadow-md z-50",
-              "transition-all animate-in fade-in slide-in-from-top-2"
+              "bg-background absolute top-full z-50 mt-1 rounded-lg p-2 shadow-md md:w-full lg:w-2/3",
+              "animate-in fade-in slide-in-from-top-2 transition-all",
             )}
           >
             {searchTerm.length === 0 ? (
@@ -236,17 +236,17 @@ export default function QuickSearch() {
               </div>
             ) : isLoading ? (
               <div className="flex flex-col gap-2">
-                <Skeleton className="w-[69px] h-5 rounded-sm bg-gray-500 mb-2" />
-                <Skeleton className="w-full h-24 rounded-sm bg-gray-500" />
-                <Skeleton className="w-full h-24 rounded-sm bg-gray-500" />
-                <Skeleton className="w-full h-24 rounded-sm bg-gray-500" />
+                <Skeleton className="mb-2 h-5 w-[69px] rounded-sm bg-gray-500" />
+                <Skeleton className="h-24 w-full rounded-sm bg-gray-500" />
+                <Skeleton className="h-24 w-full rounded-sm bg-gray-500" />
+                <Skeleton className="h-24 w-full rounded-sm bg-gray-500" />
               </div>
             ) : error ? (
               <div className="text-gray-500">Lỗi mất rồi 😭</div>
             ) : mangas.length > 0 ? (
               <>
-                <div className="mb-2 flex justify-between items-center">
-                  <p className="font-black text-xl">Manga</p>
+                <div className="mb-2 flex items-center justify-between">
+                  <p className="text-xl font-black">Manga</p>
                   <Button
                     asChild
                     size="sm"
@@ -262,7 +262,7 @@ export default function QuickSearch() {
                     </Link>
                   </Button>
                 </div>
-                <div className="grid gap-2 max-h-[80vh] overflow-y-auto">
+                <div className="grid max-h-[80vh] gap-2 overflow-y-auto">
                   {mangas.map((manga) => (
                     <Link
                       key={manga.id}
@@ -284,14 +284,14 @@ export default function QuickSearch() {
 
       {/* overlay */}
       {expanded && (
-        <div className="fixed inset-0 bg-black/30 dark:bg-white/30 h-lvh z-5" />
+        <div className="fixed inset-0 z-5 h-lvh bg-black/30 dark:bg-white/30" />
       )}
 
       <Dialog>
         <DialogTrigger asChild>
           <Button
             variant="ghost"
-            className="h-8 w-8 bg-muted/50 px-0 inline-flex shadow-xs md:hidden"
+            className="bg-muted/50 inline-flex h-8 w-8 px-0 shadow-xs md:hidden"
           >
             <Search />
             <span className="sr-only">Tìm kiếm</span>
@@ -299,9 +299,9 @@ export default function QuickSearch() {
         </DialogTrigger>
         <DialogContent
           className={cn(
-            "w-full max-w-full! border-none top-0 translate-y-0 px-4 py-2 rounded-none",
+            "top-0 w-full max-w-full! translate-y-0 rounded-none border-none px-4 py-2",
             `theme-${config.theme}`,
-            "[&>button]:hidden"
+            "[&>button]:hidden",
           )}
         >
           <DialogHeader>
@@ -310,21 +310,21 @@ export default function QuickSearch() {
           </DialogHeader>
 
           <div className="w-full">
-            <div className="flex items-center w-full justify-end gap-1.5 space-y-0">
+            <div className="flex w-full items-center justify-end gap-1.5 space-y-0">
               <Input
                 autoComplete="off"
                 placeholder="Tìm kiếm..."
-                className={cn("bg-secondary border-none h-8 shadow-xs")}
+                className={cn("bg-secondary h-8 border-none shadow-xs")}
                 value={searchTerm}
                 onChange={handleInputChange}
                 onKeyDown={handleMobileKeyDown}
                 ref={mobileInputRef}
               />
               {searchTerm.length === 0 ? (
-                <Search className="absolute right-6 transform h-4 w-4" />
+                <Search className="absolute right-6 h-4 w-4 transform" />
               ) : (
                 <Button
-                  className="absolute right-6 transform h-4 w-4 bg-primary rounded-sm"
+                  className="bg-primary absolute right-6 h-4 w-4 transform rounded-sm"
                   size="icon"
                   onClick={clearMobileSearch}
                   type="button"
@@ -353,17 +353,17 @@ export default function QuickSearch() {
                 </div>
               ) : isLoading ? (
                 <div className="flex flex-col gap-2 pb-2">
-                  <Skeleton className="w-[69px] h-5 rounded-sm bg-gray-500 mb-2" />
-                  <Skeleton className="w-full h-24 rounded-sm bg-gray-500" />
-                  <Skeleton className="w-full h-24 rounded-sm bg-gray-500" />
-                  <Skeleton className="w-full h-24 rounded-sm bg-gray-500" />
+                  <Skeleton className="mb-2 h-5 w-[69px] rounded-sm bg-gray-500" />
+                  <Skeleton className="h-24 w-full rounded-sm bg-gray-500" />
+                  <Skeleton className="h-24 w-full rounded-sm bg-gray-500" />
+                  <Skeleton className="h-24 w-full rounded-sm bg-gray-500" />
                 </div>
               ) : error ? (
                 <div className="text-gray-500">Lỗi mất rồi 😭</div>
               ) : mangas.length > 0 ? (
                 <>
-                  <div className="mb-2 flex justify-between items-center">
-                    <p className="font-black text-xl">Manga</p>
+                  <div className="mb-2 flex items-center justify-between">
+                    <p className="text-xl font-black">Manga</p>
                     <DialogClose asChild>
                       <Button
                         asChild
@@ -378,7 +378,7 @@ export default function QuickSearch() {
                       </Button>
                     </DialogClose>
                   </div>
-                  <div className="flex flex-col gap-2 max-h-[322px] overflow-y-auto pb-2">
+                  <div className="flex max-h-[322px] flex-col gap-2 overflow-y-auto pb-2">
                     {mangas.map((manga) => (
                       <Link
                         key={manga.id}

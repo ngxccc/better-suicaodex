@@ -1,7 +1,7 @@
 "use client";
 
 import NoPrefetchLink from "@/components/Custom/no-prefetch-link";
-import MangaCover from "@/components/Manga/manga-cover";
+import MangaCover from "@/features/manga/components/manga-cover";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -10,7 +10,12 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { cn, formatTimeToNow, generateSlug, getCoverImageUrl } from "@/lib/utils";
+import {
+  cn,
+  formatTimeToNow,
+  generateSlug,
+  getCoverImageUrl,
+} from "@/lib/utils";
 import { Chapter, Manga } from "@/types/types";
 import { GB, VN } from "country-flag-icons/react/3x2";
 import {
@@ -44,17 +49,19 @@ export default function LatestMangaCard({
 
   if (type === "cover") {
     return (
-      <Card className="relative rounded-sm shadow-none transition-colors duration-200 w-full h-full border-none bg-background">
-        <NoPrefetchLink href={`/manga/${manga.id}/${generateSlug(manga.title || "")}`}>
-          <CardContent className="relative p-0 rounded-sm">
+      <Card className="bg-background relative h-full w-full rounded-sm border-none shadow-none transition-colors duration-200">
+        <NoPrefetchLink
+          href={`/manga/${manga.id}/${generateSlug(manga.title || "")}`}
+        >
+          <CardContent className="relative rounded-sm p-0">
             <LazyLoadImage
               wrapperClassName={cn(
                 "block! rounded-sm object-cover w-full h-full",
-                !loaded && "aspect-5/7"
+                !loaded && "aspect-5/7",
               )}
               placeholderSrc="/images/place-doro.webp"
               className={cn(
-                "h-auto w-full rounded-sm block object-cover aspect-5/7"
+                "block aspect-5/7 h-auto w-full rounded-sm object-cover",
               )}
               src={src}
               alt={`Ảnh bìa ${manga.title}`}
@@ -66,7 +73,7 @@ export default function LatestMangaCard({
           </CardContent>
         </NoPrefetchLink>
 
-        <CardFooter className="p-0 pt-1 w-full flex flex-col gap-0 items-start">
+        <CardFooter className="flex w-full flex-col items-start gap-0 p-0 pt-1">
           <SingleCard key={chapters[0].id} chapter={chapters[0]} hideIcons />
         </CardFooter>
       </Card>
@@ -78,28 +85,30 @@ export default function LatestMangaCard({
       <CardHeader className="p-1 md:hidden">
         <NoPrefetchLink
           href={`/manga/${manga.id}/${generateSlug(manga.title || "")}`}
-          className="line-clamp-1 font-bold text-lg break-all border-b"
+          className="line-clamp-1 border-b text-lg font-bold break-all"
         >
           {manga.title}
         </NoPrefetchLink>
       </CardHeader>
       <CardContent className="flex gap-1.5 p-1 md:p-1.5">
-        <NoPrefetchLink href={`/manga/${manga.id}/${generateSlug(manga.title || "")}`}>
+        <NoPrefetchLink
+          href={`/manga/${manga.id}/${generateSlug(manga.title || "")}`}
+        >
           <MangaCover
             id={manga.id || ""}
             cover={manga.cover || ""}
             alt={manga.title || ""}
             placeholder="/images/place-doro.webp"
             wrapper="w-20 md:w-[140px] h-auto border"
-            className="w-20! h-28! md:w-[140px]! md:h-[200px]! object-cover!"
+            className="h-28! w-20! object-cover! md:h-[200px]! md:w-[140px]!"
             quality="256"
             // quality={isMobile ? "256" : "512"}
           />
         </NoPrefetchLink>
-        <div className="flex flex-col w-full">
+        <div className="flex w-full flex-col">
           <NoPrefetchLink
             href={`/manga/${manga.id}/${generateSlug(manga.title || "")}`}
-            className="hidden md:flex line-clamp-1 font-bold text-lg break-all border-b md:pb-1 px-1.5"
+            className="line-clamp-1 hidden border-b px-1.5 text-lg font-bold break-all md:flex md:pb-1"
           >
             {manga.title}
           </NoPrefetchLink>
@@ -111,7 +120,7 @@ export default function LatestMangaCard({
             <div
               className={cn(
                 "flex flex-col transition-all duration-300 ease-in-out",
-                expanded ? "max-h-[1000px] opacity-100" : "max-h-0 opacity-0"
+                expanded ? "max-h-[1000px] opacity-100" : "max-h-0 opacity-0",
               )}
             >
               {chapters.slice(maxCount).map((chapter) => (
@@ -122,10 +131,10 @@ export default function LatestMangaCard({
         </div>
       </CardContent>
       {chapters.length > maxCount && (
-        <CardFooter className="w-full pt-0 pb-1.5 justify-center">
+        <CardFooter className="w-full justify-center pt-0 pb-1.5">
           <Button
             size="sm"
-            className="h-4 px-1! text-xs bg-transparent shadow-none hover:bg-transparent text-primary"
+            className="text-primary h-4 bg-transparent px-1! text-xs shadow-none hover:bg-transparent"
             onClick={() => setExpanded((prev) => !prev)}
           >
             {expanded ? (
@@ -164,14 +173,14 @@ const SingleCard = ({ chapter, hideIcons = false }: SingleCardProps) => {
       target={chapter.externalUrl ? "_blank" : "_self"}
       className="w-full"
     >
-      <Card className="w-full flex flex-col justify-between rounded-xs px-1.5 py-1.5 shadow-none relative min-h-14 hover:bg-accent border-none">
+      <Card className="hover:bg-accent relative flex min-h-14 w-full flex-col justify-between rounded-xs border-none px-1.5 py-1.5 shadow-none">
         <div className="flex justify-between">
           <div className="flex items-center space-x-1">
             {chapter.language === "vi" && <VN className="size-4 shrink-0" />}
 
             {chapter.language === "en" && <GB className="size-4 shrink-0" />}
             {chapter.externalUrl && <ExternalLink size={16} />}
-            <p className="font-semibold text-sm md:text-base line-clamp-1">
+            <p className="line-clamp-1 text-sm font-semibold md:text-base">
               {chapter.chapter
                 ? `Ch. ${chapter.chapter}
               ${chapter.title ? ` - ${chapter.title}` : ""}`
@@ -183,7 +192,7 @@ const SingleCard = ({ chapter, hideIcons = false }: SingleCardProps) => {
             <Button
               size="sm"
               variant="ghost"
-              className="rounded-sm gap-0.5 h-6 px-1!"
+              className="h-6 gap-0.5 rounded-sm px-1!"
             >
               <MessageSquare />
             </Button>
@@ -193,7 +202,7 @@ const SingleCard = ({ chapter, hideIcons = false }: SingleCardProps) => {
           <div className="flex items-center justify-self-start">
             <Users size={16} className="shrink-0" />
             {chapter.group.length === 0 ? (
-              <span className="line-clamp-1 font-normal text-xs px-1">
+              <span className="line-clamp-1 px-1 text-xs font-normal">
                 No Group
               </span>
             ) : (
@@ -202,7 +211,7 @@ const SingleCard = ({ chapter, hideIcons = false }: SingleCardProps) => {
                   <Button
                     key={group.id}
                     variant="ghost"
-                    className="whitespace-normal! text-xs  font-normal text-start line-clamp-1 rounded-sm h-4 py-0 px-1 hover:underline hover:text-primary break-all! shrink!"
+                    className="hover:text-primary line-clamp-1 h-4 shrink! rounded-sm px-1 py-0 text-start text-xs font-normal break-all! whitespace-normal! hover:underline"
                     size="sm"
                     onClick={(e: React.MouseEvent) => {
                       e.preventDefault();
@@ -216,9 +225,9 @@ const SingleCard = ({ chapter, hideIcons = false }: SingleCardProps) => {
               </div>
             )}
           </div>
-          <div className="flex items-center space-x-1 w-full max-w-max justify-end pr-1">
+          <div className="flex w-full max-w-max items-center justify-end space-x-1 pr-1">
             <time
-              className="text-xs font-light line-clamp-1 break-all"
+              className="line-clamp-1 text-xs font-light break-all"
               dateTime={new Date(chapter.updatedAt).toDateString()}
             >
               {formatTimeToNow(new Date(chapter.updatedAt))}

@@ -2,7 +2,6 @@
 
 import { Button } from "@/components/ui/button";
 import { useConfig } from "@/hooks/use-config";
-import { getCompletedMangas } from "@/lib/mangadex/manga";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import useSWR from "swr";
@@ -16,6 +15,7 @@ import { Marquee } from "@/components/ui/marquee";
 import RecentlyCard from "../../Recently/recently-card";
 import NoPrefetchLink from "@/components/Custom/no-prefetch-link";
 import { generateSlug } from "@/lib/utils";
+import { getCompletedMangas } from "@/features/manga/api/manga";
 
 export default function CompletedSwiper() {
   const [config] = useConfig();
@@ -25,13 +25,13 @@ export default function CompletedSwiper() {
     {
       refreshInterval: 1000 * 60 * 10,
       revalidateOnFocus: false,
-    }
+    },
   );
 
   if (isLoading)
     return (
       <div className="flex flex-col">
-        <hr className="w-9 h-1 bg-primary border-none" />
+        <hr className="bg-primary h-1 w-9 border-none" />
         <h1 className="text-2xl font-black uppercase">đã hoàn thành</h1>
 
         <Alert className="rounded-sm border-none">
@@ -41,7 +41,7 @@ export default function CompletedSwiper() {
               alt="Loading..."
               unoptimized
               priority
-              className="w-20 h-auto"
+              className="h-auto w-20"
             />
           </AlertDescription>
         </Alert>
@@ -56,19 +56,19 @@ export default function CompletedSwiper() {
     <div className="grid grid-cols-1 gap-4">
       <div className="flex justify-between">
         <div>
-          <hr className="w-9 h-1 bg-primary border-none" />
+          <hr className="bg-primary h-1 w-9 border-none" />
           <h1 className="text-2xl font-black uppercase">Đã hoàn thành</h1>
         </div>
 
         <Button asChild size="icon" variant="ghost" className="[&_svg]:size-6">
           <Link href={`/advanced-search?status=completed`}>
-            <ArrowRight className="size-6!"/>
+            <ArrowRight className="size-6!" />
           </Link>
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 grid-rows-2 gap-3 h-[450px] md:h-[650px]">
-        <Marquee pauseOnHover className="[--duration:75s] p-0">
+      <div className="grid h-[450px] grid-cols-1 grid-rows-2 gap-3 md:h-[650px]">
+        <Marquee pauseOnHover className="p-0 [--duration:75s]">
           {firstRow.map((manga) => (
             <NoPrefetchLink
               key={manga.id}
@@ -79,7 +79,7 @@ export default function CompletedSwiper() {
           ))}
         </Marquee>
 
-        <Marquee reverse pauseOnHover className="[--duration:75s] p-0">
+        <Marquee reverse pauseOnHover className="p-0 [--duration:75s]">
           {secondRow.map((manga) => (
             <NoPrefetchLink
               key={manga.id}

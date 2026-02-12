@@ -1,13 +1,13 @@
 import { cn } from "@/lib/utils";
-import { ComponentProps } from "react";
+import type { ComponentProps } from "react";
 
 export default function NormalTag(props: ComponentProps<"div">) {
   return (
     <div
       {...props}
       className={cn(
-        "flex items-center gap-1 px-1.5 py-0 bg-accent font-bold rounded-sm text-[0.625rem] w-fit",
-        props.className
+        "bg-accent flex w-fit items-center gap-1 rounded-sm px-1.5 py-0 text-[0.625rem] font-bold",
+        props.className,
       )}
     >
       {props.children}

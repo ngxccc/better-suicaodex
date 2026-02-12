@@ -1,7 +1,7 @@
-import MangaCover from "@/components/Manga/manga-cover";
-import ContentRatingChip from "@/components/Manga/Tags/content-rating-tag";
-import NormalTag from "@/components/Manga/Tags/normal-tag";
-import StatusChip from "@/components/Manga/Tags/status-tag";
+import MangaCover from "@/features/manga/components/manga-cover";
+import ContentRatingChip from "@/features/manga/components/Tags/content-rating-tag";
+import NormalTag from "@/features/manga/components/Tags/normal-tag";
+import StatusChip from "@/features/manga/components/Tags/status-tag";
 import { Card, CardContent } from "@/components/ui/card";
 import { Artist, Author, Manga } from "@/types/types";
 import remarkGfm from "remark-gfm";
@@ -26,20 +26,20 @@ export default function SemiCard({ manga }: SemiCardProps) {
             alt={manga.title}
             placeholder="/images/place-doro.webp"
             wrapper="w-[130px] md:w-[150px] h-auto border"
-            className="w-[130px]! md:w-[150px]! h-[185px]! md:h-[214px]! object-cover!"
+            className="h-[185px]! w-[130px]! object-cover! md:h-[214px]! md:w-[150px]!"
             // wrapper="w-[130px] md:w-[150px] h-auto border"
             quality="256"
             //isExpandable
           />
         </NoPrefetchLink>
-        <div className="flex flex-col gap-1 w-full pr-2">
+        <div className="flex w-full flex-col gap-1 pr-2">
           <NoPrefetchLink
             href={`/manga/${manga.id}/${slug}`}
-            className="line-clamp-1 font-bold text-xl break-all"
+            className="line-clamp-1 text-xl font-bold break-all"
           >
             {manga.title}
           </NoPrefetchLink>
-          <p className="text-sm line-clamp-1 break-all -mt-2">
+          <p className="-mt-2 line-clamp-1 text-sm break-all">
             {[
               ...new Set([
                 ...manga.author.map((a: Author) => a.name).slice(0, 1),
@@ -47,9 +47,9 @@ export default function SemiCard({ manga }: SemiCardProps) {
               ]),
             ].join(", ")}
           </p>
-          <div className="mt-1 flex flex-wrap items-center gap-1 max-h-4 overflow-y-hidden">
+          <div className="mt-1 flex max-h-4 flex-wrap items-center gap-1 overflow-y-hidden">
             <StatusChip status={manga.status} />
-            <ContentRatingChip rating={manga.contentRating} disabledLink/>
+            <ContentRatingChip rating={manga.contentRating} disabledLink />
             {manga.tags.map((tag) => (
               <NormalTag key={tag.id} className="uppercase">
                 {tag.name}
@@ -72,12 +72,12 @@ export default function SemiCard({ manga }: SemiCardProps) {
                   </a>
                 ),
                 table: ({ children }) => (
-                  <table className="table-auto border-collapse border border-secondary rounded-md w-fit">
+                  <table className="border-secondary w-fit table-auto border-collapse rounded-md border">
                     {children}
                   </table>
                 ),
                 thead: ({ children }) => (
-                  <thead className="border-b border-secondary">
+                  <thead className="border-secondary border-b">
                     {children}
                   </thead>
                 ),

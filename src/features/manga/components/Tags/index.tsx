@@ -1,4 +1,4 @@
-import { Tag } from "@/types/types";
+import type { Tag } from "@/types/types";
 import StatusChip from "./status-tag";
 import ContentRatingChip from "./content-rating-tag";
 import NormalTag from "./normal-tag";
@@ -19,7 +19,7 @@ export default function Tags({ tags, contentRating, status }: TagsProps) {
         <NormalTag key={tag.id} className="uppercase">
           <a
             href={`/tag/${tag.id}/${generateSlug(tag.name)}`}
-            className="hover:underline text-gray-700 dark:text-white"
+            className="text-gray-700 hover:underline dark:text-white"
           >
             {tag.name}
           </a>

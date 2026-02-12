@@ -1,12 +1,12 @@
-import MangaNotFound from "@/components/Manga/manga-notfound";
+import MangaNotFound from "@/features/manga/components/manga-notfound";
 import MangaDetails from "@/components/Pages/MangaDetails/manga-details";
 import { siteConfig } from "@/config/site";
-import { fetchMangaDetail } from "@/lib/mangadex/manga";
 import type { Manga } from "@/types/types";
 import type { Metadata } from "next";
 import { validate as isValidUUID } from "uuid";
 import { cache } from "react";
 import { generateSlug } from "@/lib/utils";
+import { fetchMangaDetail } from "@/features/manga/api/manga";
 
 // Revalidate the page every 24 hours (86400 seconds)
 export const revalidate = 86400;
@@ -47,7 +47,7 @@ export async function generateMetadata({
         description,
         images: [
           {
-            url: `${siteConfig.mangadexAPI.ogURL}/manga/${manga.id}`,
+            url: `${siteConfig.mangadexAPI.ogUrl}/manga/${manga.id}`,
             width: 1200,
             height: 630,
             alt: "SuicaoDex",
@@ -58,7 +58,7 @@ export async function generateMetadata({
         card: "summary_large_image",
         title: `${manga.title} - SuicaoDex`,
         description,
-        images: [`${siteConfig.mangadexAPI.ogURL}/manga/${manga.id}`],
+        images: [`${siteConfig.mangadexAPI.ogUrl}/manga/${manga.id}`],
       },
     };
   } catch {
@@ -109,7 +109,7 @@ function generateJsonLd(
     description: description,
     image: {
       "@type": "ImageObject",
-      url: `${siteConfig.mangadexAPI.ogURL}/manga/${manga.id}`,
+      url: `${siteConfig.mangadexAPI.ogUrl}/manga/${manga.id}`,
       width: 1280,
       height: 960,
     },

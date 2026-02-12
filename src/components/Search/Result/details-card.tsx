@@ -1,7 +1,7 @@
-import MangaCover from "@/components/Manga/manga-cover";
-import ContentRatingChip from "@/components/Manga/Tags/content-rating-tag";
-import NormalTag from "@/components/Manga/Tags/normal-tag";
-import StatusChip from "@/components/Manga/Tags/status-tag";
+import MangaCover from "@/features/manga/components/manga-cover";
+import ContentRatingChip from "@/features/manga/components/Tags/content-rating-tag";
+import NormalTag from "@/features/manga/components/Tags/normal-tag";
+import StatusChip from "@/features/manga/components/Tags/status-tag";
 import { Card, CardContent } from "@/components/ui/card";
 import { Manga } from "@/types/types";
 import remarkGfm from "remark-gfm";
@@ -16,7 +16,7 @@ interface DetailsCardProps {
 export default function DetailsCard({ manga }: DetailsCardProps) {
   const slug = generateSlug(manga.title);
   return (
-    <Card className="rounded-sm shadow-xs transition-colors duration-200 w-full">
+    <Card className="w-full rounded-sm shadow-xs transition-colors duration-200">
       <CardContent className="flex gap-2 p-1">
         <NoPrefetchLink href={`/manga/${manga.id}/${slug}`}>
           <MangaCover
@@ -25,22 +25,22 @@ export default function DetailsCard({ manga }: DetailsCardProps) {
             alt={manga.title}
             placeholder="/images/place-doro.webp"
             wrapper="w-20 h-auto border"
-            className="w-20! h-28! object-cover!"
+            className="h-28! w-20! object-cover!"
             quality="256"
             //isExpandable
           />
         </NoPrefetchLink>
-        <div className="flex flex-col gap-1 w-full pr-2">
+        <div className="flex w-full flex-col gap-1 pr-2">
           <div className="flex items-center justify-between">
             <NoPrefetchLink
               href={`/manga/${manga.id}/${slug}`}
-              className="line-clamp-1 font-bold text-xl break-all"
+              className="line-clamp-1 text-xl font-bold break-all"
             >
               {manga.title}
             </NoPrefetchLink>
             <StatusChip status={manga.status} />
           </div>
-          <div className="flex flex-wrap items-center gap-1 max-h-4 overflow-y-hidden">
+          <div className="flex max-h-4 flex-wrap items-center gap-1 overflow-y-hidden">
             <ContentRatingChip rating={manga.contentRating} disabledLink />
             {manga.tags.map((tag) => (
               <NormalTag key={tag.id} className="uppercase">
@@ -55,7 +55,7 @@ export default function DetailsCard({ manga }: DetailsCardProps) {
             }}
           >
             <ReactMarkdown
-              className="flex flex-col gap-0 text-sm max-h-[60px] overflow-y-hidden break-all"
+              className="flex max-h-[60px] flex-col gap-0 overflow-y-hidden text-sm break-all"
               remarkPlugins={[[remarkGfm, { singleTilde: false }]]}
               components={{
                 a: ({ href, children }) => (
@@ -69,12 +69,12 @@ export default function DetailsCard({ manga }: DetailsCardProps) {
                   </a>
                 ),
                 table: ({ children }) => (
-                  <table className="table-auto border-collapse border border-secondary rounded-md w-fit">
+                  <table className="border-secondary w-fit table-auto border-collapse rounded-md border">
                     {children}
                   </table>
                 ),
                 thead: ({ children }) => (
-                  <thead className="border-b border-secondary">
+                  <thead className="border-secondary border-b">
                     {children}
                   </thead>
                 ),

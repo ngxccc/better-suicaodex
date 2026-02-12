@@ -1,13 +1,13 @@
 "use client";
 
 import { ChapterList } from "@/components/Chapter/ChapterList";
-import Banner from "@/components/Manga/manga-banner";
-import MangaCover from "@/components/Manga/manga-cover";
-import MangaDescription from "@/components/Manga/manga-description";
-import MangaMaintain from "@/components/Manga/manga-maintain";
-import MangaNotFound from "@/components/Manga/manga-notfound";
-import { MangaStatsComponent } from "@/components/Manga/manga-stats";
-import Tags from "@/components/Manga/Tags";
+import Banner from "@/features/manga/components/manga-banner";
+import MangaCover from "@/features/manga/components/manga-cover";
+import MangaDescription from "@/features/manga/components/manga-description";
+import MangaMaintain from "@/features/manga/components/manga-maintain";
+import MangaNotFound from "@/features/manga/components/manga-notfound";
+import { MangaStatsComponent } from "@/features/manga/components/manga-stats";
+import Tags from "@/features/manga/components/Tags";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -30,7 +30,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { siteConfig } from "@/config/site";
 import { useConfig } from "@/hooks/use-config";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { fetchMangaDetail } from "@/lib/mangadex/manga";
+import { fetchMangaDetail } from "@/features/manga/api/manga";
 import type { Artist, Author, Manga } from "@/types/types";
 import {
   Archive,
@@ -49,12 +49,12 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 import useSWR from "swr";
 import MangaDetailsSkeleton from "./manga-details-skeleton";
-import AddToLibraryBtn from "@/components/Manga/add-to-library-btn";
-import MangaCoversTab from "@/components/Manga/manga-covers-tab";
-import MangaSubInfo from "@/components/Manga/manga-subinfo";
+import AddToLibraryBtn from "@/features/manga/components/add-to-library-btn";
+import MangaCoversTab from "@/features/manga/components/manga-covers-tab";
+import MangaSubInfo from "@/features/manga/components/manga-subinfo";
 import CommentSection from "@/components/Comment/comment-section";
 import { useCommentCount } from "@/hooks/use-comment-count";
-import MangaRecommendations from "@/components/Manga/manga-recomendations";
+import MangaRecommendations from "@/features/manga/components/manga-recomendations";
 import NoPrefetchLink from "@/components/Custom/no-prefetch-link";
 import { WarpBackground } from "@/components/ui/warp-background";
 import {
@@ -64,7 +64,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { RainbowButton } from "@/components/ui/rainbow-button";
-import { MangaReadNowButton } from "@/components/Manga/manga-readnow-button";
+import { MangaReadNowButton } from "@/features/manga/components/manga-readnow-button";
 
 interface MangaDetailsProps {
   id: string;
@@ -308,7 +308,7 @@ export default function MangaDetails({ id, initialData }: MangaDetailsProps) {
                       asChild
                     >
                       <NoPrefetchLink
-                        href={siteConfig.suicaodex.mato_domain}
+                        href={siteConfig.mangadexAPI.baseUrl}
                         target="_blank"
                       >
                         <SquareArrowOutUpRightIcon />

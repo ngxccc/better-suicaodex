@@ -1,7 +1,7 @@
 "use client";
 
 import { useConfig } from "@/hooks/use-config";
-import { getTopFollowedMangas } from "@/lib/mangadex/manga";
+import { getTopFollowedMangas } from "@/features/manga/api/manga";
 import useSWR from "swr";
 import TopFollowedCard from "./top-followed-card";
 import { Separator } from "@/components/ui/separator";
@@ -16,7 +16,7 @@ export default function TopFollowed() {
     {
       refreshInterval: 1000 * 60 * 10,
       revalidateOnFocus: false,
-    }
+    },
   );
 
   if (isLoading)
@@ -33,12 +33,12 @@ export default function TopFollowed() {
     <div className="grid grid-cols-1 gap-1.5 rounded-sm">
       {data.map((manga, index) => (
         <div key={manga.id} className="flex flex-col gap-1.5">
-          <div className="flex gap-1.5 justify-between items-center">
+          <div className="flex items-center justify-between gap-1.5">
             <TopFollowedCard key={manga.id} manga={manga} />
             <span
               className={cn(
-                "text-7xl md:text-8xl font-black",
-                index === 0 && "text-primary"
+                "text-7xl font-black md:text-8xl",
+                index === 0 && "text-primary",
               )}
             >
               {index + 1}

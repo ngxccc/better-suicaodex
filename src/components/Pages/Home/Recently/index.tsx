@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { useConfig } from "@/hooks/use-config";
-import { getRecentlyMangas } from "@/lib/mangadex/manga";
+import { getRecentlyMangas } from "@/features/manga/api/manga";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import useSWR from "swr";
@@ -18,20 +18,20 @@ export default function RecentlyAdded() {
     ([, limit, language, r18]) => getRecentlyMangas(limit, language, r18),
     {
       refreshInterval: 1000 * 60 * 10,
-    }
+    },
   );
 
   if (isLoading)
     return (
       <div className="flex flex-col">
-        <hr className="w-9 h-1 bg-primary border-none" />
+        <hr className="bg-primary h-1 w-9 border-none" />
         <h1 className="text-2xl font-black uppercase">Truyện mới</h1>
 
-        <div className="mt-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3">
+        <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
           {[...Array(6)].map((_, index) => (
             <Skeleton
               key={index}
-              className="w-full h-[300px] rounded-sm bg-gray-500"
+              className="h-[300px] w-full rounded-sm bg-gray-500"
             />
           ))}
         </div>
@@ -44,7 +44,7 @@ export default function RecentlyAdded() {
     <div className="flex flex-col">
       <div className="flex justify-between">
         <div>
-          <hr className="w-9 h-1 bg-primary border-none" />
+          <hr className="bg-primary h-1 w-9 border-none" />
           <h1 className="text-2xl font-black uppercase">Truyện mới</h1>
         </div>
 
@@ -55,7 +55,7 @@ export default function RecentlyAdded() {
         </Button>
       </div>
 
-      <div className="mt-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3">
+      <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
         {data.mangas.map((manga) => (
           <NoPrefetchLink
             key={manga.id}

@@ -1,12 +1,16 @@
 "use client";
 
 import { useConfig } from "@/hooks/use-config";
-import { getRecommendedMangas } from "@/lib/mangadex/manga";
+import { getRecommendedMangas } from "@/features/manga/api/manga";
 import { Loader2, Terminal } from "lucide-react";
 import useSWR from "swr";
-import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
-import NoPrefetchLink from "../Custom/no-prefetch-link";
-import RecentlyCard from "../Pages/Home/Recently/recently-card";
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "../../../components/ui/alert";
+import NoPrefetchLink from "../../../components/Custom/no-prefetch-link";
+import RecentlyCard from "../../../components/Pages/Home/Recently/recently-card";
 import { generateSlug } from "@/lib/utils";
 
 interface MangaRecommendationsProps {
@@ -22,12 +26,12 @@ export default function MangaRecommendations({
     {
       refreshInterval: 1000 * 60 * 30,
       revalidateOnFocus: false,
-    }
+    },
   );
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center w-full h-16">
-        <Loader2 className="animate-spin w-8 h-8" />
+      <div className="flex h-16 w-full items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin" />
       </div>
     );
   }
@@ -55,9 +59,12 @@ export default function MangaRecommendations({
   }
 
   return (
-    <div className="mt-2 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
+    <div className="mt-2 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
       {data.map((manga) => (
-        <NoPrefetchLink key={manga.id} href={`/manga/${manga.id}/${generateSlug(manga.title)}`}>
+        <NoPrefetchLink
+          key={manga.id}
+          href={`/manga/${manga.id}/${generateSlug(manga.title)}`}
+        >
           <RecentlyCard manga={manga} />
         </NoPrefetchLink>
       ))}

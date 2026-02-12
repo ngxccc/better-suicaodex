@@ -3,7 +3,7 @@
 import { getCovers } from "@/lib/mangadex/cover";
 import { Expand, Globe, Loader2 } from "lucide-react";
 import useSWR from "swr";
-import { Card, CardContent, CardFooter } from "../ui/card";
+import { Card, CardContent, CardFooter } from "../../../components/ui/card";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { cn, getCoverImageUrl } from "@/lib/utils";
 import { useState } from "react";
@@ -14,9 +14,9 @@ import {
   DialogTitle,
   DialogTrigger,
   DialogClose,
-} from "../ui/dialog";
+} from "../../../components/ui/dialog";
 import { GB, JP, VN } from "country-flag-icons/react/3x2";
-import { MultiSelect } from "../ui/multi-select";
+import { MultiSelect } from "../../../components/ui/multi-select";
 import { useIsMobile } from "@/hooks/use-mobile";
 import type { Cover } from "@/types/types";
 import Image from "next/image";

@@ -1,10 +1,10 @@
 "use client";
 
 import { useConfig } from "@/hooks/use-config";
-import { FirstChapters } from "@/lib/mangadex/manga";
+import { FirstChapters } from "@/features/manga/api/manga";
 import { getChapterAggregate } from "@/lib/mangadex/chapter";
 import { useState, memo } from "react";
-import { Button } from "../ui/button";
+import { Button } from "../../../components/ui/button";
 import { BookOpen, BookX, Loader2 } from "lucide-react";
 import useReadingHistory from "@/hooks/use-reading-history";
 import useSWR from "swr";
@@ -14,9 +14,9 @@ import {
   DialogHeader,
   DialogTitle,
   DialogDescription,
-} from "../ui/dialog";
-import { SingleCard } from "../Chapter/ChapterList/chapter-card";
-import NoPrefetchLink from "../Custom/no-prefetch-link";
+} from "../../../components/ui/dialog";
+import { SingleCard } from "../../../components/Chapter/ChapterList/chapter-card";
+import NoPrefetchLink from "../../../components/Custom/no-prefetch-link";
 import { useRouter } from "next/navigation";
 
 interface MangaReadNowButtonProps {
@@ -97,7 +97,7 @@ export function MangaReadNowButton({ id, language }: MangaReadNowButtonProps) {
     return (
       <Button
         variant="secondary"
-        className="rounded-sm md:h-10 grow md:grow-0"
+        className="grow rounded-sm md:h-10 md:grow-0"
         asChild
       >
         <NoPrefetchLink href={`/chapter/${readingHistory.chapterId}`}>
@@ -113,7 +113,7 @@ export function MangaReadNowButton({ id, language }: MangaReadNowButtonProps) {
       <Button
         variant="secondary"
         disabled
-        className="rounded-sm md:h-10 grow md:grow-0"
+        className="grow rounded-sm md:h-10 md:grow-0"
       >
         <BookOpen />
         Đọc ngay
@@ -121,12 +121,12 @@ export function MangaReadNowButton({ id, language }: MangaReadNowButtonProps) {
     );
   }
 
-  if (chapters && chapters.length === 0) {
+  if (chapters?.length === 0) {
     return (
       <Button
         variant="secondary"
         disabled
-        className="rounded-sm md:h-10 grow md:grow-0"
+        className="grow rounded-sm md:h-10 md:grow-0"
       >
         <BookX />
         Đọc ngay
@@ -138,7 +138,7 @@ export function MangaReadNowButton({ id, language }: MangaReadNowButtonProps) {
     <>
       <Button
         variant="secondary"
-        className="rounded-sm md:h-10 grow md:grow-0"
+        className="grow rounded-sm md:h-10 md:grow-0"
         onClick={handleReadNow}
         disabled={isLoading}
       >

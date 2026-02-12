@@ -4,9 +4,9 @@ import { cn } from "@/lib/utils";
 import remarkGfm from "remark-gfm";
 import ReactMarkdown from "react-markdown";
 import { SiGoogletranslate } from "@icons-pack/react-simple-icons";
-import { Button } from "../ui/button";
+import { Button } from "../../../components/ui/button";
 import useContentHeight from "@/hooks/use-content-height";
-import { Manga } from "@/types/types";
+import type { Manga } from "@/types/types";
 import MangaSubInfo from "./manga-subinfo";
 
 interface MangaDescriptionProps {
@@ -45,8 +45,8 @@ const MangaDescription = ({
     try {
       const response = await fetch(
         `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=vi&dt=t&q=${encodeURIComponent(
-          content
-        )}`
+          content,
+        )}`,
       );
       const data = await response.json();
       const translatedText = data[0].map((part: any) => part[0]).join("");
@@ -69,7 +69,7 @@ const MangaDescription = ({
   return (
     <div className="relative flex flex-col gap-1">
       <div
-        className="overflow-hidden transition-[max-height,height] text-sm h-auto"
+        className="h-auto overflow-hidden text-sm transition-[max-height,height]"
         style={{
           maxHeight: state.expanded ? fullHeight : maxHeight,
           maskImage:
@@ -95,12 +95,12 @@ const MangaDescription = ({
                   </a>
                 ),
                 table: ({ children }) => (
-                  <table className="table-auto border-collapse border border-secondary rounded-md w-fit">
+                  <table className="border-secondary w-fit table-auto border-collapse rounded-md border">
                     {children}
                   </table>
                 ),
                 thead: ({ children }) => (
-                  <thead className="border-b border-secondary">
+                  <thead className="border-secondary border-b">
                     {children}
                   </thead>
                 ),
@@ -122,7 +122,7 @@ const MangaDescription = ({
           {language === "en" && (
             <Button
               size="sm"
-              className="rounded-sm text-xs transition opacity-50 hover:opacity-100 mt-2"
+              className="mt-2 rounded-sm text-xs opacity-50 transition hover:opacity-100"
               onClick={handleTranslate}
               variant="ghost"
             >
@@ -148,13 +148,13 @@ const MangaDescription = ({
       {fullHeight > maxHeight && (
         <div
           className={cn(
-            "flex justify-center w-full border-t transition-[border-color]",
-            state.expanded ? "border-transparent" : "border-primary"
+            "flex w-full justify-center border-t transition-[border-color]",
+            state.expanded ? "border-transparent" : "border-primary",
           )}
         >
           <Button
             size="sm"
-            className="rounded-t-none h-4 px-1! text-xs"
+            className="h-4 rounded-t-none px-1! text-xs"
             onClick={handleExpand}
             variant={state.expanded ? "secondary" : "default"}
           >

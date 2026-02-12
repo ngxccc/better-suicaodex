@@ -1,6 +1,6 @@
-import { Group, GroupStats, Manga, OriginalGroup } from "@/types/types";
+import type { Group, GroupStats, Manga, OriginalGroup } from "@/types/types";
 import { axiosWithProxy } from "../axios";
-import { MangaParser } from "./manga";
+import { MangaParser } from "@/features/manga/api/manga";
 
 export function GroupParser(data: OriginalGroup): Group {
   const id = data.id;

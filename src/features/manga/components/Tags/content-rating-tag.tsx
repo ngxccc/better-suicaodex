@@ -19,7 +19,7 @@ const ContentRatingChip = ({
   }[rating];
 
   return (
-    <NormalTag className={`uppercase text-white ${ratingColor}`}>
+    <NormalTag className={`text-white uppercase ${ratingColor}`}>
       {disabledLink ? (
         rating
       ) : (

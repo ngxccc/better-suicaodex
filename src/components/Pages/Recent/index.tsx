@@ -2,7 +2,7 @@
 
 import ResultTabs from "@/components/Search/Result/result-tabs";
 import { useConfig } from "@/hooks/use-config";
-import { getRecentlyMangas } from "@/lib/mangadex/manga";
+import { getRecentlyMangas } from "@/features/manga/api/manga";
 import useSWR from "swr";
 import {
   Pagination,
@@ -29,7 +29,7 @@ export default function Recent({ page }: RecentProps) {
       getRecentlyMangas(limit, language, r18, offset),
     {
       refreshInterval: 1000 * 60 * 10,
-    }
+    },
   );
   const totalPages = Math.ceil((data?.total || 0) / 32);
 
@@ -45,7 +45,7 @@ export default function Recent({ page }: RecentProps) {
         <Pagination className="mt-4">
           <PaginationContent>
             <PaginationPrevious
-              className="w-8 h-8"
+              className="h-8 w-8"
               onClick={() => handlePageChange(page - 1)}
               disabled={page === 1}
             />
@@ -55,7 +55,7 @@ export default function Recent({ page }: RecentProps) {
               Array.from({ length: totalPages }, (_, i) => (
                 <PaginationItem key={i + 1}>
                   <PaginationLink
-                    className="w-8 h-8"
+                    className="h-8 w-8"
                     isActive={i + 1 === page}
                     onClick={() => handlePageChange(i + 1)}
                   >
@@ -69,7 +69,7 @@ export default function Recent({ page }: RecentProps) {
                 {[1, 2, 3, 4, 5].map((num) => (
                   <PaginationItem key={num}>
                     <PaginationLink
-                      className="w-8 h-8"
+                      className="h-8 w-8"
                       isActive={num === page}
                       onClick={() => handlePageChange(num)}
                     >
@@ -80,7 +80,7 @@ export default function Recent({ page }: RecentProps) {
                 <PaginationEllipsis />
                 <PaginationItem>
                   <PaginationLink
-                    className="w-8 h-8"
+                    className="h-8 w-8"
                     onClick={() => handlePageChange(totalPages)}
                   >
                     {totalPages}
@@ -92,7 +92,7 @@ export default function Recent({ page }: RecentProps) {
               <>
                 <PaginationItem>
                   <PaginationLink
-                    className="w-8 h-8"
+                    className="h-8 w-8"
                     onClick={() => handlePageChange(1)}
                   >
                     1
@@ -108,7 +108,7 @@ export default function Recent({ page }: RecentProps) {
                 ].map((num) => (
                   <PaginationItem key={num}>
                     <PaginationLink
-                      className="w-8 h-8"
+                      className="h-8 w-8"
                       isActive={num === page}
                       onClick={() => handlePageChange(num)}
                     >
@@ -122,7 +122,7 @@ export default function Recent({ page }: RecentProps) {
               <>
                 <PaginationItem>
                   <PaginationLink
-                    className="w-8 h-8"
+                    className="h-8 w-8"
                     onClick={() => handlePageChange(1)}
                   >
                     1
@@ -132,7 +132,7 @@ export default function Recent({ page }: RecentProps) {
                 {[page - 1, page, page + 1].map((num) => (
                   <PaginationItem key={num}>
                     <PaginationLink
-                      className="w-8 h-8"
+                      className="h-8 w-8"
                       isActive={num === page}
                       onClick={() => handlePageChange(num)}
                     >
@@ -143,7 +143,7 @@ export default function Recent({ page }: RecentProps) {
                 <PaginationEllipsis />
                 <PaginationItem>
                   <PaginationLink
-                    className="w-8 h-8"
+                    className="h-8 w-8"
                     onClick={() => handlePageChange(totalPages)}
                   >
                     {totalPages}
@@ -153,7 +153,7 @@ export default function Recent({ page }: RecentProps) {
             )}
 
             <PaginationNext
-              className="w-8 h-8"
+              className="h-8 w-8"
               onClick={() => handlePageChange(page + 1)}
               disabled={page === totalPages}
             />

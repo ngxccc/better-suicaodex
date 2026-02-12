@@ -1,4 +1,4 @@
-import { getCachedPopularMangas } from "@/lib/mangadex/manga";
+import { getCachedPopularMangas } from "@/features/manga/api/manga";
 import PopularSwiper from "./index";
 
 export default async function PopularContainer() {
