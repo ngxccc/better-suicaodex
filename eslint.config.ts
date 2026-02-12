@@ -28,23 +28,28 @@ const eslintConfig = defineConfig([
   {
     languageOptions: {
       parserOptions: {
-        projectService: {
-          allowDefaultProject: ["eslint.config.mjs"],
-          defaultProject: "tsconfig.json",
-        },
+        projectService: true,
         tsconfigRootDir: import.meta.dirname,
       },
     },
     rules: {
       ...eslintConfigPrettier.rules,
 
-      "@typescript-eslint/no-explicit-any": "off", // Disable 'no-explicit-any'
+      "@typescript-eslint/no-explicit-any": "warn",
       "@typescript-eslint/no-unused-vars": [
         "warn",
         { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
       ],
 
       "prettier/prettier": "warn",
+
+      "@typescript-eslint/consistent-type-imports": [
+        "error",
+        {
+          prefer: "type-imports", // Bắt buộc dùng import type
+          fixStyle: "separate-type-imports", // Tự động fix thành: import type { Metadata } ...
+        },
+      ],
     },
   },
 ]);
