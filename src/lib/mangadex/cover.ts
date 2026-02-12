@@ -1,5 +1,5 @@
 import { Cover } from "@/types/types";
-import { axiosWithProxyFallback } from "../axios";
+import { axiosWithProxy } from "../axios";
 
 export function CoverParser(data: any): Cover {
   return {
@@ -31,7 +31,7 @@ export async function getCovers(m_ids: string[]): Promise<Cover[]> {
     //   },
     // });
 
-    const data = await axiosWithProxyFallback({
+    const data = await axiosWithProxy({
       url: `/cover?`,
       method: "get",
       params: {
@@ -43,11 +43,11 @@ export async function getCovers(m_ids: string[]): Promise<Cover[]> {
         },
       },
     });
-    
+
     const total = data.total;
     const currentResults = data.data.map((item: any) => CoverParser(item));
     totalResults = [...totalResults, ...currentResults];
-    
+
     offset += LIMIT;
     // Kiểm tra xem đã lấy đủ dữ liệu chưa
     hasMore = offset < total;

@@ -1,4 +1,4 @@
-import { MetadataRoute } from "next";
+import type { MetadataRoute } from "next";
 
 const BASE_URL = process.env.SITEMAP_URL ?? "https://suicaodex.net";
 

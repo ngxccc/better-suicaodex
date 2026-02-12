@@ -1,5 +1,5 @@
 import { Manga } from "@/types/types";
-import { axiosWithProxyFallback } from "../axios";
+import { axiosWithProxy } from "../axios";
 import { MangaParser } from "./manga";
 
 export async function AdvancedSearchManga(
@@ -59,11 +59,11 @@ export async function AdvancedSearchManga(
     searchParams["availableTranslatedLanguage"] = translated;
   }
 
-  if(!!year) {
+  if (!!year) {
     searchParams["year"] = year;
   }
 
-  const data = await axiosWithProxyFallback({
+  const data = await axiosWithProxy({
     url: `/manga`,
     method: "get",
     params: searchParams,

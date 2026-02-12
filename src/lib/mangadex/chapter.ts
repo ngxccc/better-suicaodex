@@ -1,12 +1,12 @@
 import { Chapter, ChapterAggregate, Volume } from "@/types/types";
 import { GroupParser } from "./group";
-import { axiosWithProxyFallback } from "../axios";
+import { axiosWithProxy } from "../axios";
 import { getCurrentImageProxyUrl } from "../utils";
 
 export function ChaptersParser(data: any[]): Chapter[] {
   return data.map((item) => {
     const mangaData = item.relationships.find(
-      (item: any) => item.type === "manga"
+      (item: any) => item.type === "manga",
     );
 
     const groups = item.relationships
@@ -32,26 +32,26 @@ export function ChaptersParser(data: any[]): Chapter[] {
 
 export function ChapterParser(data: any): Chapter {
   const mangaData = data.relationships.find(
-      (item: any) => item.type === "manga"
-    );
+    (item: any) => item.type === "manga",
+  );
 
-    const groups = data.relationships
-      .filter((item: any) => item.type === "scanlation_group")
-      .map((item: any) => GroupParser(item));
+  const groups = data.relationships
+    .filter((item: any) => item.type === "scanlation_group")
+    .map((item: any) => GroupParser(item));
 
-    return {
-      id: data.id,
-      vol: data.attributes.volume,
-      chapter: data.attributes.chapter,
-      title: data.attributes.title,
-      updatedAt: data.attributes.updatedAt,
-      externalUrl: data.attributes.externalUrl,
-      language: data.attributes.translatedLanguage,
-      group: groups,
-      manga: {
-        id: mangaData.id,
-      },
-    };
+  return {
+    id: data.id,
+    vol: data.attributes.volume,
+    chapter: data.attributes.chapter,
+    title: data.attributes.title,
+    updatedAt: data.attributes.updatedAt,
+    externalUrl: data.attributes.externalUrl,
+    language: data.attributes.translatedLanguage,
+    group: groups,
+    manga: {
+      id: mangaData.id,
+    },
+  };
 }
 
 export function groupChaptersByVolume(chapters: Chapter[]): Volume[] {
@@ -67,7 +67,7 @@ export function groupChaptersByVolume(chapters: Chapter[]): Volume[] {
 
     // Find or create the chapter group within the volume
     let chapterGroup = volumeMap[vol].chapters.find(
-      (group) => group.chapter === chapNum
+      (group) => group.chapter === chapNum,
     );
 
     if (!chapterGroup) {
@@ -97,7 +97,7 @@ export async function getChapterVolume(
   limit: number,
   offset: number,
   r18?: boolean,
-  showUnavailable?: boolean
+  showUnavailable?: boolean,
 ): Promise<{ volumes: Volume[]; total: number }> {
   const order = {
     volume: "desc",
@@ -115,7 +115,7 @@ export async function getChapterVolume(
     contentRating.push("pornographic");
   }
 
-  const data = await axiosWithProxyFallback({
+  const data = await axiosWithProxy({
     url: `/manga/${mangaID}/feed?`,
     method: "get",
     params: {
@@ -127,7 +127,7 @@ export async function getChapterVolume(
       includeUnavailable: showUnavailable ? "1" : "0",
       ...finalOrderQuery,
     },
-  })
+  });
 
   const total = data.total;
   const chapters = ChaptersParser(data.data);
@@ -143,14 +143,14 @@ export async function getChapterDetail(id: string): Promise<Chapter> {
   // });
 
   const [data, atHomeData] = await Promise.all([
-    axiosWithProxyFallback({
+    axiosWithProxy({
       url: `/chapter/${id}?`,
       method: "get",
       params: {
         includes: ["scanlation_group", "manga"],
       },
     }),
-    axiosWithProxyFallback({
+    axiosWithProxy({
       url: `/ch/${id}`,
       method: "get",
     }),
@@ -158,10 +158,10 @@ export async function getChapterDetail(id: string): Promise<Chapter> {
 
   const manga = () => {
     const mangaData = data.data.relationships.find(
-      (item: any) => item.type === "manga"
+      (item: any) => item.type === "manga",
     );
     const titleVi = mangaData.attributes.altTitles.find(
-      (item: any) => item.vi
+      (item: any) => item.vi,
     )?.vi;
     let title = titleVi
       ? titleVi
@@ -182,10 +182,8 @@ export async function getChapterDetail(id: string): Promise<Chapter> {
   // Use the current working API URL for images
   // const apiUrl = getCurrentApiUrl();
   const apiUrl = getCurrentImageProxyUrl();
-  
-  const pages = atHomeData.images.map(
-    (item: string) => `${apiUrl}/${item}`
-  );
+
+  const pages = atHomeData.images.map((item: string) => `${apiUrl}/${item}`);
 
   return { ...chapter, manga: manga(), pages };
 }
@@ -193,7 +191,7 @@ export async function getChapterDetail(id: string): Promise<Chapter> {
 export async function getChapterAggregate(
   mangaID: string,
   language: string[],
-  groups?: string[]
+  groups?: string[],
 ): Promise<ChapterAggregate[]> {
   // const data = await axiosWithProxyFallback.get(`/manga/${mangaID}/aggregate?`, {
   //   params: {
@@ -201,7 +199,7 @@ export async function getChapterAggregate(
   //     groups: groups,
   //   },
   // });
-  const data = await axiosWithProxyFallback({
+  const data = await axiosWithProxy({
     url: `/manga/${mangaID}/aggregate?`,
     method: "get",
     params: {
@@ -227,7 +225,7 @@ export async function getChapterAggregate(
     }
 
     chaptersArray.sort((a, b) =>
-      b.chapter.localeCompare(a.chapter, undefined, { numeric: true })
+      b.chapter.localeCompare(a.chapter, undefined, { numeric: true }),
     );
 
     result.push({

@@ -1,6 +1,6 @@
 import { Author, AuthorDetail, Manga } from "@/types/types";
 import { MangaParser } from "./manga";
-import { axiosWithProxyFallback } from "../axios";
+import { axiosWithProxy } from "../axios";
 
 export function AuthorParser(data: any[]): Author[] {
   const authors = data.filter((item: any) => item.type === "author");
@@ -15,7 +15,7 @@ export function AuthorParser(data: any[]): Author[] {
 
 export async function SearchAuthor(author: string): Promise<Author[]> {
   if (author.length === 0) return [];
-  const data = await axiosWithProxyFallback({
+  const data = await axiosWithProxy({
     url: `/author?name=${author}`,
     method: "get",
   });
@@ -37,7 +37,7 @@ export async function SearchAuthorByIds(ids: string[]): Promise<Author[]> {
     //     ids: ids,
     //   },
     // });
-    const data = await axiosWithProxyFallback({
+    const data = await axiosWithProxy({
       url: `/author?`,
       method: "get",
       params: {
@@ -58,7 +58,7 @@ export async function SearchAuthorByIds(ids: string[]): Promise<Author[]> {
 }
 
 export async function GetAuthor(id: string): Promise<AuthorDetail> {
-  const data = await axiosWithProxyFallback({
+  const data = await axiosWithProxy({
     url: `/author/${id}`,
     method: "get",
   });
@@ -96,7 +96,7 @@ export async function GetAuthor(id: string): Promise<AuthorDetail> {
 export async function GetAuthorTitles(
   id: string,
   limit: number,
-  offset: number
+  offset: number,
 ): Promise<{
   mangas: Manga[];
   total: number;
@@ -115,7 +115,7 @@ export async function GetAuthorTitles(
   //     includes: ["author", "artist", "cover_art"],
   //   },
   // });
-  const data = await axiosWithProxyFallback({
+  const data = await axiosWithProxy({
     url: "/manga?",
     method: "get",
     params: {
@@ -126,7 +126,7 @@ export async function GetAuthorTitles(
       includes: ["author", "artist", "cover_art"],
     },
   });
-  
+
   const total = data.total > max_total ? max_total : data.total;
   return {
     mangas: data.data.map((item: any) => MangaParser(item)),

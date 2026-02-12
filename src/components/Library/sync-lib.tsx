@@ -2,19 +2,14 @@
 
 import { getMangasByIDs } from "@/lib/mangadex/history";
 import { getUserLibrary } from "@/lib/suicaodex/db";
-import { Manga } from "@/types/types";
-import {
-  Album,
-  BookmarkCheck,
-  ListCheck,
-  NotebookPen,
-} from "lucide-react";
+import type { Manga } from "@/types/types";
+import { Album, BookmarkCheck, ListCheck, NotebookPen } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 import DetailsCard from "../Search/Result/details-card";
 import Image from "next/image";
-import DoroLoading from "#/images/doro-loading.gif";
+import DoroLoading from "/images/doro-loading.gif";
 
 interface SyncLibProps {
   session: any;
@@ -65,7 +60,7 @@ export default function SyncLib({ session }: SyncLibProps) {
   if (isLoading) {
     return (
       <Tabs defaultValue="following" className="mt-2">
-        <TabsList className="rounded-sm gap-1 h-10">
+        <TabsList className="h-10 gap-1 rounded-sm">
           {tabValues.map((tab) => (
             <TabsTrigger
               key={tab.value}
@@ -86,7 +81,7 @@ export default function SyncLib({ session }: SyncLibProps) {
                   alt="Loading..."
                   unoptimized
                   priority
-                  className="w-20 h-auto"
+                  className="h-auto w-20"
                 />
               </AlertDescription>
             </Alert>
@@ -97,7 +92,7 @@ export default function SyncLib({ session }: SyncLibProps) {
   }
   if (isError) {
     <Tabs defaultValue="following" className="mt-2">
-      <TabsList className="rounded-sm gap-1 h-10">
+      <TabsList className="h-10 gap-1 rounded-sm">
         {tabValues.map((tab) => (
           <TabsTrigger key={tab.value} className="rounded-sm" value={tab.value}>
             {tab.icon}
@@ -107,7 +102,7 @@ export default function SyncLib({ session }: SyncLibProps) {
 
       {tabValues.map((tab) => (
         <TabsContent key={tab.value} value={tab.value} className="w-full">
-          <Alert className="rounded-sm bg-secondary">
+          <Alert className="bg-secondary rounded-sm">
             <AlertDescription className="flex justify-center">
               Lỗi mất rồi 😭
             </AlertDescription>
@@ -118,7 +113,7 @@ export default function SyncLib({ session }: SyncLibProps) {
   }
   return (
     <Tabs defaultValue="following" className="mt-2">
-      <TabsList className="rounded-sm gap-1 h-10">
+      <TabsList className="h-10 gap-1 rounded-sm">
         {tabValues.map((tab) => (
           <TabsTrigger key={tab.value} className="rounded-sm" value={tab.value}>
             {tab.icon}
@@ -133,10 +128,10 @@ export default function SyncLib({ session }: SyncLibProps) {
               tab.value === "following"
                 ? followingManga
                 : tab.value === "reading"
-                ? readingManga
-                : tab.value === "plan"
-                ? planManga
-                : completedManga
+                  ? readingManga
+                  : tab.value === "plan"
+                    ? planManga
+                    : completedManga
             }
           />
         </TabsContent>
@@ -153,10 +148,8 @@ interface LibraryTabContentProps {
 function LibraryTabContent({ mangas }: LibraryTabContentProps) {
   if (mangas.length === 0) {
     return (
-      <Alert className="rounded-sm justify-center text-center">
-        <AlertTitle>
-          Chưa có truyện nào!
-        </AlertTitle>
+      <Alert className="justify-center rounded-sm text-center">
+        <AlertTitle>Chưa có truyện nào!</AlertTitle>
       </Alert>
     );
   }

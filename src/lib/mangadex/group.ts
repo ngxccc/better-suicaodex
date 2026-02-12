@@ -1,5 +1,5 @@
 import { Group, GroupStats, Manga, OriginalGroup } from "@/types/types";
-import { axiosWithProxyFallback } from "../axios";
+import { axiosWithProxy } from "../axios";
 import { MangaParser } from "./manga";
 
 export function GroupParser(data: OriginalGroup): Group {
@@ -28,7 +28,7 @@ export function GroupParser(data: OriginalGroup): Group {
   const twitter = attributes.twitter;
   const leader =
     data.relationships?.find(
-      (relationship) => relationship.type === "leader"
+      (relationship) => relationship.type === "leader",
     ) ?? null;
   const language = attributes.focusedLanguages;
 
@@ -49,7 +49,7 @@ export function GroupParser(data: OriginalGroup): Group {
 }
 
 export async function getGroup(id: string): Promise<Group> {
-  const data = await axiosWithProxyFallback({
+  const data = await axiosWithProxy({
     url: `/group/${id}`,
     method: "get",
     params: {
@@ -62,11 +62,11 @@ export async function getGroup(id: string): Promise<Group> {
 export async function getGroupStats(id: string): Promise<GroupStats> {
   try {
     const [statsResponse, uploadedResponse] = await Promise.all([
-      axiosWithProxyFallback({
+      axiosWithProxy({
         url: `/statistics/group/${id}`,
         method: "get",
       }),
-      axiosWithProxyFallback({
+      axiosWithProxy({
         url: `/chapter`,
         method: "get",
         params: {
@@ -91,7 +91,7 @@ export async function getGroupStats(id: string): Promise<GroupStats> {
 export async function getGroupTitles(
   id: string,
   limit: number,
-  offset: number
+  offset: number,
 ): Promise<{
   mangas: Manga[];
   total: number;
@@ -101,7 +101,7 @@ export async function getGroupTitles(
   if (limit + offset > max_total) {
     limit = max_total - offset;
   }
-  const data = await axiosWithProxyFallback({
+  const data = await axiosWithProxy({
     url: `/manga`,
     method: "get",
     params: {
@@ -123,7 +123,7 @@ export async function getGroupTitles(
 export async function searchGroups(
   query: string,
   limit: number,
-  offset: number
+  offset: number,
 ): Promise<{
   groups: Group[];
   total: number;
@@ -143,7 +143,7 @@ export async function searchGroups(
     params.name = query;
   }
 
-  const data = await axiosWithProxyFallback({
+  const data = await axiosWithProxy({
     url: `/group`,
     method: "get",
     params: params,

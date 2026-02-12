@@ -4,7 +4,7 @@ import DetailsCard from "@/components/Search/Result/details-card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useLocalLibrary } from "@/hooks/use-local-library";
 import { getMangasByIDs } from "@/lib/mangadex/history";
-import { LibraryType } from "@/types/types";
+import type { LibraryType } from "@/types/types";
 import { Trash, Undo, Trash2 } from "lucide-react";
 import { useState } from "react";
 import useSWR from "swr";
@@ -43,7 +43,7 @@ export default function MyLibrary({ category }: MyLibraryProps) {
     {
       refreshInterval: 1000 * 60 * 10,
       revalidateOnFocus: false,
-    }
+    },
   );
 
   const handlePageChange = (newPage: number) => {
@@ -74,7 +74,7 @@ export default function MyLibrary({ category }: MyLibraryProps) {
             alt="Loading..."
             unoptimized
             priority
-            className="w-20 h-auto"
+            className="h-auto w-20"
           />
         </AlertDescription>
       </Alert>
@@ -83,7 +83,7 @@ export default function MyLibrary({ category }: MyLibraryProps) {
 
   if (error) {
     return (
-      <Alert className="rounded-sm bg-secondary">
+      <Alert className="bg-secondary rounded-sm">
         <AlertDescription className="flex justify-center">
           Lỗi mất rồi 😭
         </AlertDescription>
@@ -93,10 +93,8 @@ export default function MyLibrary({ category }: MyLibraryProps) {
 
   if (!data || data.length === 0) {
     return (
-      <Alert className="rounded-sm justify-center text-center">
-        <AlertTitle>
-          Chưa có truyện nào!
-        </AlertTitle>
+      <Alert className="justify-center rounded-sm text-center">
+        <AlertTitle>Chưa có truyện nào!</AlertTitle>
       </Alert>
     );
   }
@@ -105,31 +103,31 @@ export default function MyLibrary({ category }: MyLibraryProps) {
     <>
       <div className="flex flex-col gap-2">
         {data.map((manga) => (
-          <div key={manga.id} className="relative group">
-            <div className="flex items-center w-full overflow-hidden">
+          <div key={manga.id} className="group relative">
+            <div className="flex w-full items-center overflow-hidden">
               <div
                 className={cn(
                   "grow transition-transform duration-300 ease-in-out group-hover:translate-x-[-60px]",
                   pendingDeleteId === manga.id &&
-                    "translate-x-[-60px] grayscale opacity-60"
+                    "translate-x-[-60px] opacity-60 grayscale",
                 )}
               >
                 <DetailsCard manga={manga} />
               </div>
 
               {pendingDeleteId === manga.id ? (
-                <div className="absolute right-0 top-1/2 transform -translate-y-1/2 grid grid-rows-2 gap-1 h-full">
+                <div className="absolute top-1/2 right-0 grid h-full -translate-y-1/2 transform grid-rows-2 gap-1">
                   <Button
                     variant="outline"
                     onClick={handleUndoClick}
-                    className="rounded-sm h-full w-10 mr-1 flex items-center justify-center"
+                    className="mr-1 flex h-full w-10 items-center justify-center rounded-sm"
                   >
                     <Undo className="size-4" />
                   </Button>
                   <Button
                     variant="destructive"
                     onClick={() => handleConfirmDelete(manga.id)}
-                    className="rounded-sm h-full w-10 flex items-center justify-center"
+                    className="flex h-full w-10 items-center justify-center rounded-sm"
                   >
                     <Trash2 className="size-4" />
                   </Button>
@@ -138,7 +136,7 @@ export default function MyLibrary({ category }: MyLibraryProps) {
                 <Button
                   variant="destructive"
                   onClick={() => handleDeleteClick(manga.id)}
-                  className="rounded-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out h-full w-10 absolute right-0 top-1/2 transform -translate-y-1/2"
+                  className="absolute top-1/2 right-0 h-full w-10 -translate-y-1/2 transform rounded-sm opacity-0 transition-opacity duration-300 ease-in-out group-hover:opacity-100"
                 >
                   <Trash className="size-5" />
                 </Button>
@@ -152,7 +150,7 @@ export default function MyLibrary({ category }: MyLibraryProps) {
         <Pagination className="mt-4">
           <PaginationContent>
             <PaginationPrevious
-              className="w-8 h-8"
+              className="h-8 w-8"
               onClick={() => handlePageChange(page - 1)}
               disabled={page === 1}
             />
@@ -162,7 +160,7 @@ export default function MyLibrary({ category }: MyLibraryProps) {
               Array.from({ length: totalPages }, (_, i) => (
                 <PaginationItem key={i + 1}>
                   <PaginationLink
-                    className="w-8 h-8"
+                    className="h-8 w-8"
                     isActive={i + 1 === page}
                     onClick={() => handlePageChange(i + 1)}
                   >
@@ -176,7 +174,7 @@ export default function MyLibrary({ category }: MyLibraryProps) {
                 {[1, 2, 3, 4, 5].map((num) => (
                   <PaginationItem key={num}>
                     <PaginationLink
-                      className="w-8 h-8"
+                      className="h-8 w-8"
                       isActive={num === page}
                       onClick={() => handlePageChange(num)}
                     >
@@ -187,7 +185,7 @@ export default function MyLibrary({ category }: MyLibraryProps) {
                 <PaginationEllipsis />
                 <PaginationItem>
                   <PaginationLink
-                    className="w-8 h-8"
+                    className="h-8 w-8"
                     onClick={() => handlePageChange(totalPages)}
                   >
                     {totalPages}
@@ -199,7 +197,7 @@ export default function MyLibrary({ category }: MyLibraryProps) {
               <>
                 <PaginationItem>
                   <PaginationLink
-                    className="w-8 h-8"
+                    className="h-8 w-8"
                     onClick={() => handlePageChange(1)}
                   >
                     1
@@ -215,7 +213,7 @@ export default function MyLibrary({ category }: MyLibraryProps) {
                 ].map((num) => (
                   <PaginationItem key={num}>
                     <PaginationLink
-                      className="w-8 h-8"
+                      className="h-8 w-8"
                       isActive={num === page}
                       onClick={() => handlePageChange(num)}
                     >
@@ -229,7 +227,7 @@ export default function MyLibrary({ category }: MyLibraryProps) {
               <>
                 <PaginationItem>
                   <PaginationLink
-                    className="w-8 h-8"
+                    className="h-8 w-8"
                     onClick={() => handlePageChange(1)}
                   >
                     1
@@ -239,7 +237,7 @@ export default function MyLibrary({ category }: MyLibraryProps) {
                 {[page - 1, page, page + 1].map((num) => (
                   <PaginationItem key={num}>
                     <PaginationLink
-                      className="w-8 h-8"
+                      className="h-8 w-8"
                       isActive={num === page}
                       onClick={() => handlePageChange(num)}
                     >
@@ -250,7 +248,7 @@ export default function MyLibrary({ category }: MyLibraryProps) {
                 <PaginationEllipsis />
                 <PaginationItem>
                   <PaginationLink
-                    className="w-8 h-8"
+                    className="h-8 w-8"
                     onClick={() => handlePageChange(totalPages)}
                   >
                     {totalPages}
@@ -260,7 +258,7 @@ export default function MyLibrary({ category }: MyLibraryProps) {
             )}
 
             <PaginationNext
-              className="w-8 h-8"
+              className="h-8 w-8"
               onClick={() => handlePageChange(page + 1)}
               disabled={page === totalPages}
             />

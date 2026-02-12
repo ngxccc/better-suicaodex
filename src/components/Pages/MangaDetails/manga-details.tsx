@@ -31,7 +31,7 @@ import { siteConfig } from "@/config/site";
 import { useConfig } from "@/hooks/use-config";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { fetchMangaDetail } from "@/lib/mangadex/manga";
-import { Artist, Author, Manga } from "@/types/types";
+import type { Artist, Author, Manga } from "@/types/types";
 import {
   Archive,
   Bug,
@@ -40,17 +40,15 @@ import {
   LibraryBig,
   List,
   MessageSquare,
-  Share2,
   Sprout,
   Square,
   SquareArrowOutUpRightIcon,
   SquareCheckBig,
 } from "lucide-react";
 import Link from "next/link";
-import { useCallback, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import useSWR from "swr";
 import MangaDetailsSkeleton from "./manga-details-skeleton";
-import { toast } from "sonner";
 import AddToLibraryBtn from "@/components/Manga/add-to-library-btn";
 import MangaCoversTab from "@/components/Manga/manga-covers-tab";
 import MangaSubInfo from "@/components/Manga/manga-subinfo";
@@ -85,18 +83,19 @@ export default function MangaDetails({ id, initialData }: MangaDetailsProps) {
     data: manga,
     error,
     isLoading,
-  } = useSWR([`manga-${id}`, id], ([, id]) => fetchMangaDetail(id), {
+  } = useSWR(id, fetchMangaDetail, {
     fallbackData: initialData, // Use server data as initial value
     revalidateOnMount: !initialData, // Only revalidate on mount if no initial data
     refreshInterval: 1000 * 60 * 10,
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
+    keepPreviousData: true,
   });
 
   if (error?.status === 404) return <MangaNotFound />;
   if (error?.status === 503) return <MangaMaintain />;
 
-  if (isLoading || !manga) return <MangaDetailsSkeleton />;
+  if (!manga || error) return <MangaDetailsSkeleton />;
 
   return (
     <>
@@ -139,7 +138,7 @@ export default function MangaDetails({ id, initialData }: MangaDetailsProps) {
 
       {/* Content */}
       <div className="grid grid-cols-1 gap-4">
-        <div className="grid grid-cols-[auto_1fr] gap-4 w-full">
+        <div className="grid w-full grid-cols-[auto_1fr] gap-4">
           <div className="relative">
             <MangaCover
               id={manga.id}
@@ -152,10 +151,10 @@ export default function MangaDetails({ id, initialData }: MangaDetailsProps) {
             />
           </div>
 
-          <div className="flex md:hidden flex-col gap-2 justify-between">
+          <div className="flex flex-col justify-between gap-2 md:hidden">
             <div className="flex flex-col gap-1.5">
               <p
-                className="drop-shadow-md font-black leading-[1.15]"
+                className="leading-[1.15] font-black drop-shadow-md"
                 style={{
                   fontSize: `clamp(0.875rem, ${
                     manga.title.length <= 30
@@ -172,7 +171,7 @@ export default function MangaDetails({ id, initialData }: MangaDetailsProps) {
                 {manga.title}
               </p>
               {!!manga.altTitle && (
-                <h2 className="drop-shadow-md text-base leading-5 line-clamp-2">
+                <h2 className="line-clamp-2 text-base leading-5 drop-shadow-md">
                   {manga.altTitle}
                 </h2>
               )}
@@ -180,7 +179,7 @@ export default function MangaDetails({ id, initialData }: MangaDetailsProps) {
               <AuthorArtistNames
                 authors={manga.author}
                 artists={manga.artist}
-                className="text-sm line-clamp-1 max-w-[80%]"
+                className="line-clamp-1 max-w-[80%] text-sm"
               />
             </div>
             {!!manga.stats && (
@@ -188,11 +187,11 @@ export default function MangaDetails({ id, initialData }: MangaDetailsProps) {
             )}
           </div>
 
-          <div className="hidden md:flex flex-col">
-            <div className="flex flex-col justify-between h-54 pb-2">
+          <div className="hidden flex-col md:flex">
+            <div className="flex h-54 flex-col justify-between pb-2">
               <div className="flex flex-col">
                 <p
-                  className="drop-shadow-md font-black wrap-break-word leading-[1.15]"
+                  className="leading-[1.15] font-black wrap-break-word drop-shadow-md"
                   style={{
                     fontSize: `clamp(2.25rem, ${
                       manga.title.length <= 20
@@ -211,7 +210,7 @@ export default function MangaDetails({ id, initialData }: MangaDetailsProps) {
                 </p>
                 {!!manga.altTitle && (
                   <span
-                    className="drop-shadow-md text-lg line-clamp-1"
+                    className="line-clamp-1 text-lg drop-shadow-md"
                     title={manga.altTitle}
                   >
                     {manga.altTitle}
@@ -225,7 +224,7 @@ export default function MangaDetails({ id, initialData }: MangaDetailsProps) {
               />
             </div>
 
-            <div className="pt-[0.85rem] flex flex-col gap-4">
+            <div className="flex flex-col gap-4 pt-[0.85rem]">
               <div className="flex flex-wrap gap-2">
                 <AddToLibraryBtn manga={manga} />
 
@@ -234,7 +233,7 @@ export default function MangaDetails({ id, initialData }: MangaDetailsProps) {
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button
-                      className="rounded-sm h-10 w-10"
+                      className="h-10 w-10 rounded-sm"
                       variant="secondary"
                       size="icon"
                     >
@@ -298,14 +297,14 @@ export default function MangaDetails({ id, initialData }: MangaDetailsProps) {
         {manga.id === siteConfig.mangadexAPI.matoSeiheiID &&
           config.translatedLanguage.includes("vi") && (
             <WarpBackground className="p-10 md:p-20">
-              <Card className="rounded-sm bg-card/60 border-0 shadow-none">
+              <Card className="bg-card/60 rounded-sm border-0 shadow-none">
                 <CardContent className="flex flex-col gap-2 p-4">
-                  <CardTitle className="text-2xl flex flex-col md:flex-row items-center gap-2">
+                  <CardTitle className="flex flex-col items-center gap-2 text-2xl md:flex-row">
                     <span className="text-center md:text-left">
                       Đọc Mato Seihei cập nhật mới nhất
                     </span>
                     <RainbowButton
-                      className="uppercase w-full md:w-auto text-white dark:text-black"
+                      className="w-full text-white uppercase md:w-auto dark:text-black"
                       asChild
                     >
                       <NoPrefetchLink
@@ -330,7 +329,7 @@ export default function MangaDetails({ id, initialData }: MangaDetailsProps) {
             </WarpBackground>
           )}
 
-        <div className="flex md:hidden flex-wrap gap-1">
+        <div className="flex flex-wrap gap-1 md:hidden">
           <Tags
             tags={manga.tags}
             contentRating={manga.contentRating}
@@ -338,13 +337,13 @@ export default function MangaDetails({ id, initialData }: MangaDetailsProps) {
           />
         </div>
 
-        <div className="flex md:hidden flex-wrap gap-2 w-full">
+        <div className="flex w-full flex-wrap gap-2 md:hidden">
           <AddToLibraryBtn manga={manga} />
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
-                className="rounded-sm grow-0"
+                className="grow-0 rounded-sm"
                 variant="secondary"
                 size="icon"
               >
@@ -400,25 +399,25 @@ export default function MangaDetails({ id, initialData }: MangaDetailsProps) {
           manga={manga}
         />
 
-        <div className="flex flex-row gap-4 w-full">
-          <div className="hidden xl:block pt-2 min-w-[25%] max-w-[400px]">
+        <div className="flex w-full flex-row gap-4">
+          <div className="hidden max-w-[400px] min-w-[25%] pt-2 xl:block">
             <MangaSubInfo manga={manga} />
           </div>
 
           <div className="w-full">
             <Tabs defaultValue="chapter">
-              <div className="relative overflow-x-auto h-12">
+              <div className="relative h-12 overflow-x-auto">
                 <TabsList className="absolute rounded-sm">
                   <TabsTrigger
                     value="chapter"
-                    className="rounded-sm flex gap-1 px-2"
+                    className="flex gap-1 rounded-sm px-2"
                   >
                     <List size={18} />
                     Danh sách chương
                   </TabsTrigger>
                   <TabsTrigger
                     value="comment"
-                    className="rounded-sm flex gap-1 px-2"
+                    className="flex gap-1 rounded-sm px-2"
                   >
                     <MessageSquare size={18} />
                     Bình luận
@@ -429,7 +428,7 @@ export default function MangaDetails({ id, initialData }: MangaDetailsProps) {
 
                   <TabsTrigger
                     value="art"
-                    className="rounded-sm flex gap-1 px-2"
+                    className="flex gap-1 rounded-sm px-2"
                   >
                     <ImagesIcon size={18} />
                     Ảnh bìa
@@ -437,7 +436,7 @@ export default function MangaDetails({ id, initialData }: MangaDetailsProps) {
 
                   <TabsTrigger
                     value="recommendation"
-                    className="rounded-sm flex gap-1 px-2"
+                    className="flex gap-1 rounded-sm px-2"
                   >
                     <Sprout size={18} />
                     Có thể bạn sẽ thích
@@ -448,7 +447,7 @@ export default function MangaDetails({ id, initialData }: MangaDetailsProps) {
               <TabsContent value="chapter" className="mt-0">
                 <Button
                   variant="ghost"
-                  className="px-0! hover:bg-transparent! text-base [&_svg]:size-5 whitespace-normal!"
+                  className="px-0! text-base whitespace-normal! hover:bg-transparent! [&_svg]:size-5"
                   size="lg"
                   onClick={() => setShowHiddenChapters(!showHiddenChapters)}
                 >
@@ -457,7 +456,7 @@ export default function MangaDetails({ id, initialData }: MangaDetailsProps) {
                   ) : (
                     <Square strokeWidth={3} />
                   )}
-                  <span className="break-all! line-clamp-1">
+                  <span className="line-clamp-1 break-all!">
                     Hiển thị các chương ẩn (nếu có)
                   </span>
                 </Button>

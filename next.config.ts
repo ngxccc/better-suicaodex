@@ -1,46 +1,30 @@
+import { siteConfig } from "@/config/site";
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
   experimental: {
-    optimizePackageImports: ['lucide-react', 'recharts'],
-    // webpackMemoryOptimizations: true,
+    optimizePackageImports: ["lucide-react", "recharts"],
   },
   images: {
     qualities: [25, 50, 75, 100],
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "api.suicaodex.com",
+        hostname: siteConfig.proxy.defaultUrl.replace(/^https?:\/\//, ""),
         port: "",
-        pathname: "/covers/**",
-        search: "",
+        pathname: "/**",
       },
-      {
-        protocol: "https",
-        hostname: "api2.suicaodex.com",
-        port: "",
-        pathname: "/covers/**",
-        search: "",
-      },
-      {
-        protocol: "https",
-        hostname: "clf.suicaodex.com",
-        port: "",
-        pathname: "/covers/**",
-        search: "",
-      },
+
       {
         protocol: "https",
         hostname: "cataas.com",
         port: "",
         pathname: "/**",
-        search: "",
       },
     ],
   },
   allowedDevOrigins: ["*.suicaodex.com"],
-  rewrites: async () => [
+  rewrites: () => [
     {
       source: "/manga-sitemap.xml",
       destination: "/manga-sitemap",
@@ -49,7 +33,7 @@ const nextConfig: NextConfig = {
       source: "/manga-sitemap-:page.xml",
       destination: "/manga-sitemap/:page",
     },
-  ]
+  ],
 };
 
 export default nextConfig;

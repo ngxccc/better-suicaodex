@@ -1,4 +1,4 @@
-import { axiosWithProxyFallback } from "../axios";
+import { axiosWithProxy } from "../axios";
 import type {
   Artist,
   Author,
@@ -18,6 +18,7 @@ import type {
   MangaTag,
   Relationship,
 } from "@/types/manga";
+import { cacheRequest } from "../cache-utils";
 
 function getPreferredTitle(
   titles: Record<string, string>,
@@ -157,7 +158,7 @@ export function MangaStatsParser(data: any, id: string): MangaStats {
 
 export async function fetchMangaDetail(id: string): Promise<Manga> {
   const [mangaResponse, stats] = await Promise.all([
-    axiosWithProxyFallback<MangaDexApiResponse>({
+    axiosWithProxy<MangaDexApiResponse>({
       url: `/manga/${id}?`,
       method: "get",
       params: {
@@ -179,7 +180,7 @@ export async function fetchMangaDetail(id: string): Promise<Manga> {
 
 export async function getMangaStats(id: string): Promise<MangaStats> {
   try {
-    const data = await axiosWithProxyFallback({
+    const data = await axiosWithProxy({
       url: `/statistics/manga/${id}`,
       method: "get",
     });
@@ -211,7 +212,7 @@ export async function getMangaStats(id: string): Promise<MangaStats> {
 
 export async function getMangasStats(ids: string[]): Promise<MangasStats[]> {
   try {
-    const data = await axiosWithProxyFallback({
+    const data = await axiosWithProxy({
       url: `/statistics/manga?`,
       method: "get",
       params: {
@@ -274,7 +275,7 @@ export async function getFirstChapter(
     },
   };
   const [{ data: en }, { data: vi }] = await Promise.all([
-    axiosWithProxyFallback({
+    axiosWithProxy({
       url: `/manga/${id}/feed`,
       method: "get",
       params: {
@@ -282,7 +283,7 @@ export async function getFirstChapter(
         translatedLanguage: ["en"],
       },
     }),
-    axiosWithProxyFallback({
+    axiosWithProxy({
       url: `/manga/${id}/feed`,
       method: "get",
       params: {
@@ -302,7 +303,7 @@ export async function FirstViChapter(
   id: string,
   r18: boolean,
 ): Promise<Chapter> {
-  const data = await axiosWithProxyFallback({
+  const data = await axiosWithProxy({
     url: `/manga/${id}/feed`,
     method: "get",
     params: {
@@ -325,7 +326,7 @@ export async function FirstEnChapter(
   id: string,
   r18: boolean,
 ): Promise<Chapter> {
-  const data = await axiosWithProxyFallback({
+  const data = await axiosWithProxy({
     url: `/manga/${id}/feed`,
     method: "get",
     params: {
@@ -351,7 +352,7 @@ export async function FirstChapters(
   volume?: string,
   chapter?: string,
 ): Promise<Chapter[]> {
-  const data = await axiosWithProxyFallback({
+  const data = await axiosWithProxy({
     url: `/chapter`,
     method: "get",
     params: {
@@ -377,7 +378,7 @@ export async function SearchManga(
   query: string,
   r18: boolean,
 ): Promise<Manga[]> {
-  const data = await axiosWithProxyFallback({
+  const data = await axiosWithProxy({
     url: "/manga?",
     method: "get",
     params: {
@@ -407,7 +408,7 @@ export async function getPopularMangas(
   language: ("vi" | "en")[],
   r18: boolean,
 ): Promise<Manga[]> {
-  const data = await axiosWithProxyFallback({
+  const data = await axiosWithProxy({
     url: `/manga?`,
     method: "get",
     params: {
@@ -430,6 +431,13 @@ export async function getPopularMangas(
   return data.data.map((item: any) => MangaParser(item));
 }
 
+export const getCachedPopularMangas = cacheRequest(
+  getPopularMangas,
+  ["popular-mangas"], // Key định danh duy nhất cho cache file system
+  ["manga"], // Tag để sau này dùng revalidateTag('manga') nếu muốn xóa cache
+  60 * 60, // Cache 1 tiếng (60 * 60 giây)
+);
+
 export async function getRecentlyMangas(
   limit: number,
   language: ("vi" | "en")[],
@@ -444,7 +452,7 @@ export async function getRecentlyMangas(
   if (limit + safeOffset > max_total) {
     limit = max_total - safeOffset;
   }
-  const data = await axiosWithProxyFallback({
+  const data = await axiosWithProxy({
     url: `/manga?`,
     method: "get",
     params: {
@@ -485,7 +493,7 @@ export async function getTopFollowedMangas(
     },
   };
 
-  const data = await axiosWithProxyFallback({
+  const data = await axiosWithProxy({
     url: `/manga?`,
     method: "get",
     params,
@@ -504,7 +512,7 @@ export async function getTopRatedMangas(
   language: ("vi" | "en")[],
   r18: boolean,
 ): Promise<Manga[]> {
-  const data = await axiosWithProxyFallback({
+  const data = await axiosWithProxy({
     url: `/manga?`,
     method: "get",
     params: {
@@ -537,7 +545,7 @@ export async function getStaffPickMangas(r18: boolean): Promise<Manga[]> {
   // Randomly choose between staffPickList and seasonalList
   const selectedList = Math.random() < 0.5 ? staffPickList : seasonalList;
 
-  const StaffPickID = await axiosWithProxyFallback({
+  const StaffPickID = await axiosWithProxy({
     url: `/list/${selectedList}`,
     method: "get",
   }).then((res) =>
@@ -551,7 +559,7 @@ export async function getStaffPickMangas(r18: boolean): Promise<Manga[]> {
   const limit = Math.min(32, StaffPickID.length);
   const maxOffset = Math.max(StaffPickID.length - limit, 0);
 
-  const data = await axiosWithProxyFallback({
+  const data = await axiosWithProxy({
     url: `/manga?`,
     method: "get",
     params: {
@@ -589,7 +597,7 @@ export async function getCompletedMangas(
   language: ("vi" | "en")[],
   r18: boolean,
 ): Promise<Manga[]> {
-  const data = await axiosWithProxyFallback({
+  const data = await axiosWithProxy({
     url: `/manga?`,
     method: "get",
     params: {
@@ -611,7 +619,7 @@ export async function getRecommendedMangas(
   id: string,
   r18: boolean,
 ): Promise<Manga[]> {
-  const rcmData = await axiosWithProxyFallback({
+  const rcmData = await axiosWithProxy({
     url: `/manga/${id}/recommendation`,
     method: "get",
   });
@@ -623,7 +631,7 @@ export async function getRecommendedMangas(
 
   if (mangaIDs.length === 0) return [];
 
-  const mangasData = await axiosWithProxyFallback({
+  const mangasData = await axiosWithProxy({
     url: "/manga",
     method: "get",
     params: {
@@ -640,7 +648,7 @@ export async function getRecommendedMangas(
 }
 
 export async function getTotalMangas(): Promise<number> {
-  const data = await axiosWithProxyFallback({
+  const data = await axiosWithProxy({
     url: `/manga`,
     method: "get",
     params: {

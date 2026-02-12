@@ -32,7 +32,7 @@ export function NotificationProvider({
         if (retryCount >= 3) return; // Stop retrying after 3 attempts
         setTimeout(() => revalidate({ retryCount }), 1000); // Retry after 1 second
       },
-    }
+    },
   );
 
   // Check for new chapters and show notifications
@@ -82,7 +82,7 @@ export function NotificationProvider({
                 toast.dismiss();
               },
             },
-          }
+          },
         );
       });
 

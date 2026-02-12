@@ -1,7 +1,8 @@
 "use client";
 import { cn, getCoverImageUrl } from "@/lib/utils";
 import { Expand, Loader2 } from "lucide-react";
-import { FC, useState } from "react";
+import type { FC } from "react";
+import { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -44,17 +45,17 @@ const MangaCover: FC<MangaCoverProps> = ({
     <div className="relative">
       {isExpandable && (
         <Dialog>
-          <DialogTrigger className="z-10 flex opacity-0 hover:opacity-100 transition-opacity items-center justify-center absolute inset-0 bg-black/50 rounded-sm cursor-pointer">
+          <DialogTrigger className="absolute inset-0 z-10 flex cursor-pointer items-center justify-center rounded-sm bg-black/50 opacity-0 transition-opacity hover:opacity-100">
             <Expand size={50} color="white" />
           </DialogTrigger>
 
-          <DialogContent className="[&>button]:hidden bg-transparent border-none border-0 shadow-none p-0 w-full h-auto rounded-none! justify-center">
+          <DialogContent className="h-auto w-full justify-center rounded-none! border-0 border-none bg-transparent p-0 shadow-none [&>button]:hidden">
             <DialogTitle className="hidden"></DialogTitle>
             <DialogDescription className="hidden"></DialogDescription>
 
             <DialogClose className="fixed inset-0 z-0 block! cursor-default" />
-            <div className="max-w-[90vw] md:max-w-screen max-h-[90vh] lg:max-h-screen flex justify-center items-center relative z-10">
-              <div className="absolute bg-secondary p-5 rounded-sm">
+            <div className="relative z-10 flex max-h-[90vh] max-w-[90vw] items-center justify-center md:max-w-screen lg:max-h-screen">
+              <div className="bg-secondary absolute rounded-sm p-5">
                 <Loader2 className="animate-spin" size={50} />
               </div>
               {/* <img
@@ -69,7 +70,7 @@ const MangaCover: FC<MangaCoverProps> = ({
               <Hover3DCard
                 imageSrc={getCoverImageUrl(id, cover, "full")}
                 alt={`Ảnh bìa ${alt}`}
-                className="max-h-full max-w-full object-cover z-20 rounded-none"
+                className="z-20 max-h-full max-w-full rounded-none object-cover"
               />
             </div>
           </DialogContent>
@@ -80,10 +81,10 @@ const MangaCover: FC<MangaCoverProps> = ({
         wrapperClassName={cn(
           "block! rounded-sm object-cover",
           !loaded && "aspect-5/7",
-          wrapper
+          wrapper,
         )}
         placeholderSrc={placeholder}
-        className={cn("h-auto w-full rounded-sm block", className)}
+        className={cn("block h-auto w-full rounded-sm", className)}
         src={src}
         alt={`Ảnh bìa ${alt}`}
         onLoad={() => setLoaded(true)}

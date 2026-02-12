@@ -1,39 +1,47 @@
 "use client";
 
 import { cn, generateSlug, getCoverImageUrl } from "@/lib/utils";
-import { Artist, Author, Manga } from "@/types/types";
+import type { Artist, Author, Manga } from "@/types/types";
 import remarkGfm from "remark-gfm";
 import ReactMarkdown from "react-markdown";
 import Tags from "@/components/Manga/Tags";
 import MangaCover from "@/components/Manga/manga-cover";
 import { useIsMobile } from "@/hooks/use-mobile";
 import NoPrefetchLink from "@/components/Custom/no-prefetch-link";
+import Image from "next/image";
 
 interface MangaSlideProps {
   manga: Manga;
+  priority?: boolean;
 }
 
-export default function MangaSlide({ manga }: MangaSlideProps) {
+export default function MangaSlide({
+  manga,
+  priority = false,
+}: MangaSlideProps) {
   const isMobile = useIsMobile();
-  const bannerSrc = getCoverImageUrl(manga.id, manga.cover, "full");
+  const bannerSrc = manga.cover
+    ? getCoverImageUrl(manga.id, manga.cover, "full")
+    : "/images/place-doro.webp";
   const slug = generateSlug(manga.title);
 
   return (
     <>
       {/* Banner */}
-      <div className="absolute h-[324px] md:h-[400px] z-[-2] w-auto left-0 right-0 top-0 block">
-        <div
-          className={cn(
-            "absolute h-[324px] md:h-[400px] w-full",
-            "bg-no-repeat bg-cover bg-position-[center_top_25%]"
-          )}
-          style={{ backgroundImage: `url('${bannerSrc}')` }}
-        ></div>
+      <div className="absolute top-0 right-0 left-0 z-[-2] block h-[324px] w-auto md:h-[400px]">
+        <Image
+          src={bannerSrc}
+          alt={manga.title}
+          fill
+          priority={priority}
+          className="object-cover object-[center_top_25%]"
+          sizes="100vw"
+        />
 
         <div
           className={cn(
-            "absolute h-[324px] md:h-[400px] w-auto inset-0 pointer-events-none",
-            "bg-linear-to-b from-background/25 to-background backdrop-blur-[0.5px]"
+            "pointer-events-none absolute inset-0 h-[324px] w-auto md:h-[400px]",
+            "from-background/25 to-background bg-linear-to-b backdrop-blur-[0.5px]",
           )}
         ></div>
       </div>
@@ -42,24 +50,24 @@ export default function MangaSlide({ manga }: MangaSlideProps) {
 
       <div
         className={cn(
-          "flex gap-4 h-full pt-28 px-4 md:pl-8 lg:pl-12",
-          "md:pr-[calc(32px+var(--sidebar-width-icon))] lg:pr-[calc(48px+var(--sidebar-width-icon))]"
+          "flex h-full gap-4 px-4 pt-28 md:pl-8 lg:pl-12",
+          "md:pr-[calc(32px+var(--sidebar-width-icon))] lg:pr-[calc(48px+var(--sidebar-width-icon))]",
         )}
       >
         <NoPrefetchLink href={`/manga/${manga.id}/${slug}`}>
           <MangaCover
             id={manga.id}
-            cover={manga.cover}
+            cover={manga.cover ?? ""}
             alt={manga.title}
             placeholder="/images/place-doro.webp"
-            className="shadow-md drop-shadow-md aspect-7/10 object-cover!"
+            className="aspect-7/10 object-cover! shadow-md drop-shadow-md"
             wrapper="w-[130px] md:w-[200px] lg:w-[215px] h-auto"
             preload={true}
           />
         </NoPrefetchLink>
 
         <div
-          className="grid gap-6 sm:gap-2 h-full min-h-0 pb-8 md:pb-1.5 lg:pb-1"
+          className="grid h-full min-h-0 gap-6 pb-8 sm:gap-2 md:pb-1.5 lg:pb-1"
           style={{
             gridTemplateRows: isMobile
               ? "1fr auto"
@@ -67,12 +75,12 @@ export default function MangaSlide({ manga }: MangaSlideProps) {
           }}
         >
           <NoPrefetchLink href={`/manga/${manga.id}/${slug}`}>
-            <p className="drop-shadow-md font-black text-xl line-clamp-5 sm:line-clamp-2 lg:text-4xl overflow-hidden lg:leading-11!">
+            <p className="line-clamp-5 overflow-hidden text-xl font-black drop-shadow-md sm:line-clamp-2 lg:text-4xl lg:leading-11!">
               {manga.title}
             </p>
           </NoPrefetchLink>
 
-          <div className="hidden md:flex flex-wrap gap-1">
+          <div className="hidden flex-wrap gap-1 md:flex">
             <Tags
               tags={manga.tags}
               contentRating={manga.contentRating}
@@ -80,7 +88,7 @@ export default function MangaSlide({ manga }: MangaSlideProps) {
             />
           </div>
 
-          <div className="hidden md:block min-h-0 relative overflow-auto">
+          <div className="relative hidden min-h-0 overflow-auto md:block">
             <div className="relative overflow-hidden">
               <ReactMarkdown
                 className="text-sm"
@@ -97,12 +105,12 @@ export default function MangaSlide({ manga }: MangaSlideProps) {
                     </a>
                   ),
                   table: ({ children }) => (
-                    <table className="table-auto border-collapse border border-secondary rounded-md w-fit">
+                    <table className="border-secondary w-fit table-auto border-collapse rounded-md border">
                       {children}
                     </table>
                   ),
                   thead: ({ children }) => (
-                    <thead className="border-b border-secondary">
+                    <thead className="border-secondary border-b">
                       {children}
                     </thead>
                   ),
@@ -122,7 +130,7 @@ export default function MangaSlide({ manga }: MangaSlideProps) {
             </div>
           </div>
 
-          <p className="self-end text-base md:text-lg italic font-medium line-clamp-1 max-w-full md:max-w-[80%]">
+          <p className="line-clamp-1 max-w-full self-end text-base font-medium italic md:max-w-[80%] md:text-lg">
             {[
               ...new Set([
                 ...manga.author.map((a: Author) => a.name),

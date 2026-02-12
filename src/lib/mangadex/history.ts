@@ -1,32 +1,33 @@
 import { Chapter, Manga } from "@/types/types";
-import { axiosWithProxyFallback } from "../axios";
+import { axiosWithProxy } from "../axios";
 import { MangaParser } from "./manga";
 import { ChapterParser } from "./chapter";
 
 export async function fetchHistory(
   m_ids: string[],
-  c_ids: string[]
+  c_ids: string[],
 ): Promise<Chapter[]> {
-    if (m_ids.length === 0 || c_ids.length === 0 || m_ids.length !== c_ids.length) return [];
-    const mangaRequest = getMangasByIDs(m_ids);
-    const chapterRequest = getChaptersByIds(c_ids);
-    
-    const [mangas, chapters] = await Promise.all([mangaRequest, chapterRequest]);
+  if (m_ids.length === 0 || c_ids.length === 0 || m_ids.length !== c_ids.length)
+    return [];
+  const mangaRequest = getMangasByIDs(m_ids);
+  const chapterRequest = getChaptersByIds(c_ids);
 
-    return chapters.map(chapter => {
-      const relatedManga = mangas.find(manga => manga.id === chapter.manga.id);
-      if (relatedManga) {
-        return {
-          ...chapter,
-          manga: {
-            ...chapter.manga,
-            title: relatedManga.title,
-            cover: relatedManga.cover
-          }
-        };
-      }
-      return chapter;
-    });
+  const [mangas, chapters] = await Promise.all([mangaRequest, chapterRequest]);
+
+  return chapters.map((chapter) => {
+    const relatedManga = mangas.find((manga) => manga.id === chapter.manga.id);
+    if (relatedManga) {
+      return {
+        ...chapter,
+        manga: {
+          ...chapter.manga,
+          title: relatedManga.title,
+          cover: relatedManga.cover,
+        },
+      };
+    }
+    return chapter;
+  });
 }
 
 export async function getMangasByIDs(ids: string[]): Promise<Manga[]> {
@@ -40,7 +41,7 @@ export async function getMangasByIDs(ids: string[]): Promise<Manga[]> {
   }
 
   const requests = chunks.map((chunk) =>
-    axiosWithProxyFallback({
+    axiosWithProxy({
       url: `/manga`,
       method: "get",
       params: {
@@ -49,7 +50,7 @@ export async function getMangasByIDs(ids: string[]): Promise<Manga[]> {
         includes: ["cover_art", "author", "artist"],
         contentRating: ["safe", "suggestive", "erotica", "pornographic"],
       },
-    })
+    }),
   );
 
   const responses = await Promise.all(requests);
@@ -69,7 +70,7 @@ export async function getChaptersByIds(ids: string[]): Promise<Chapter[]> {
   }
 
   const requests = chunks.map((chunk) =>
-    axiosWithProxyFallback({
+    axiosWithProxy({
       url: `/chapter`,
       method: "get",
       params: {
@@ -78,11 +79,11 @@ export async function getChaptersByIds(ids: string[]): Promise<Chapter[]> {
         contentRating: ["safe", "suggestive", "erotica", "pornographic"],
         translatedLanguage: ["vi", "en"],
         includes: ["scanlation_group"],
-        order:{
-          readableAt: "desc"
-        }
+        order: {
+          readableAt: "desc",
+        },
       },
-    })
+    }),
   );
   const responses = await Promise.all(requests);
   const chapters = responses.flatMap((response) => response.data);

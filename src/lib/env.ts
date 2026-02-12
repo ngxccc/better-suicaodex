@@ -24,7 +24,7 @@ config({
 // commented bc dont nd it on docker or CI/CD platform
 // const checkEnv = () => {
 //   if (!existsSync(resolve(".env"))) {
-//     console.error(USERS_MESSAGES.DOTENV_FILE_NOT_FOUND);
+//     console.error("looix");
 //     process.exit(1);
 //   }
 // };

@@ -1,12 +1,13 @@
-import { Chapter, Manga } from "@/types/types";
-import { axiosWithProxyFallback } from "../axios";
+import type { Chapter, Manga } from "@/types/types";
+import { axiosWithProxy } from "../axios";
 import { ChaptersParser } from "./chapter";
 import { MangaParser } from "./manga";
+import { cacheRequest } from "../cache-utils";
 
 export async function getLatestChapters(
   max: number,
   language: ("vi" | "en")[],
-  r18: boolean
+  r18: boolean,
 ): Promise<Chapter[]> {
   if (max <= 0) return [];
   const limitPerRequest = 100;
@@ -18,7 +19,7 @@ export async function getLatestChapters(
   while (mangaMap.size < max && iterations < maxIterations) {
     iterations += 1;
     const remaining = max - mangaMap.size;
-    const chaptersData = await axiosWithProxyFallback({
+    const chaptersData = await axiosWithProxy({
       url: "/chapter",
       method: "get",
       params: {
@@ -55,11 +56,11 @@ export async function getLatestChapters(
 
     const latestChapters = uniqueMangaIDs
       .map((mangaID) =>
-        chapters.find((chapter) => chapter.manga?.id === mangaID)
+        chapters.find((chapter) => chapter.manga?.id === mangaID),
       )
       .filter((chapter): chapter is Chapter => chapter !== undefined);
 
-    const mangasData = await axiosWithProxyFallback({
+    const mangasData = await axiosWithProxy({
       url: "/manga",
       method: "get",
       params: {
@@ -94,11 +95,18 @@ export async function getLatestChapters(
   return Array.from(mangaMap.values()).slice(0, max);
 }
 
+export const getCachedLatestChapters = cacheRequest(
+  getLatestChapters,
+  ["latest-update-mangas"],
+  ["latest"],
+  60 * 60, // Cache 1 tiếng (60 * 60 giây)
+);
+
 export async function getLatestManga(
   limit: number,
   offset: number,
   language: ("vi" | "en")[],
-  r18: boolean
+  r18: boolean,
 ): Promise<{ chapters: Chapter[]; total: number }> {
   const total = 10000;
   // Ensure limit is within bounds
@@ -107,12 +115,12 @@ export async function getLatestManga(
   }
 
   // Content rating options - defined once to avoid duplication
-    const contentRating = r18
-      ? ["safe", "suggestive", "erotica", "pornographic"]
-      : ["safe", "suggestive", "erotica"];
+  const contentRating = r18
+    ? ["safe", "suggestive", "erotica", "pornographic"]
+    : ["safe", "suggestive", "erotica"];
 
   // Fetch chapters
-  const chaptersData = await axiosWithProxyFallback({
+  const chaptersData = await axiosWithProxy({
     url: "/chapter",
     method: "get",
     params: {
@@ -141,7 +149,7 @@ export async function getLatestManga(
   }
 
   // Fetch manga details
-  const mangasData = await axiosWithProxyFallback({
+  const mangasData = await axiosWithProxy({
     url: "/manga",
     method: "get",
     params: {
@@ -183,7 +191,7 @@ export async function fetchLatestChapters(
   limit: number,
   offset: number,
   language: ("vi" | "en")[],
-  r18: boolean
+  r18: boolean,
 ): Promise<Chapter[]> {
   const total = 10000;
   // Ensure limit is within bounds
@@ -197,7 +205,7 @@ export async function fetchLatestChapters(
     : ["safe", "suggestive", "erotica"];
 
   // Fetch chapters
-  const chaptersData = await axiosWithProxyFallback({
+  const chaptersData = await axiosWithProxy({
     url: "/chapter",
     method: "get",
     params: {
@@ -226,7 +234,7 @@ export async function fetchLatestChapters(
   }
 
   // Fetch manga details
-  const mangasData = await axiosWithProxyFallback({
+  const mangasData = await axiosWithProxy({
     url: "/manga",
     method: "get",
     params: {

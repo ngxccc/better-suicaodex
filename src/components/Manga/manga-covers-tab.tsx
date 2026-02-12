@@ -18,7 +18,8 @@ import {
 import { GB, JP, VN } from "country-flag-icons/react/3x2";
 import { MultiSelect } from "../ui/multi-select";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { Cover } from "@/types/types";
+import type { Cover } from "@/types/types";
+import Image from "next/image";
 
 interface MangaCoversTabProps {
   id: string;
@@ -32,21 +33,21 @@ export default function MangaCoversTab({ id }: MangaCoversTabProps) {
     {
       refreshInterval: 1000 * 60 * 30,
       revalidateOnFocus: false,
-    }
+    },
   );
   const [loaded, setLoaded] = useState(false);
   const [selectedLocale, setSelectedLocale] = useState(["ja", "vi"]);
 
   if (isLoading)
     return (
-      <div className="flex justify-center items-center w-full h-16">
-        <Loader2 className="animate-spin w-8 h-8" />
+      <div className="flex h-16 w-full items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin" />
       </div>
     );
 
   if (error) {
     return (
-      <Card className="mt-2 rounded-sm justify-center items-center flex h-16 w-full">
+      <Card className="mt-2 flex h-16 w-full items-center justify-center rounded-sm">
         <p className="italic">Lỗi mất rồi 😭</p>
       </Card>
     );
@@ -54,7 +55,7 @@ export default function MangaCoversTab({ id }: MangaCoversTabProps) {
 
   if (!data || data.length === 0) {
     return (
-      <Card className="mt-2 rounded-sm justify-center items-center flex h-16 w-full">
+      <Card className="mt-2 flex h-16 w-full items-center justify-center rounded-sm">
         <p className="italic">Không có kết quả!</p>
       </Card>
     );
@@ -73,7 +74,7 @@ export default function MangaCoversTab({ id }: MangaCoversTabProps) {
   return (
     <>
       <MultiSelect
-        className="w-full mt-2 shadow-xs"
+        className="mt-2 w-full shadow-xs"
         placeholder="Mặc định"
         disableFooter
         disableSearch
@@ -83,48 +84,50 @@ export default function MangaCoversTab({ id }: MangaCoversTabProps) {
         maxCount={isMobile ? 1 : 4}
       />
 
-      <div className="mt-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
+      <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
         {filterByLocale(selectedLocale, data).map((cover) => (
           <Card
             key={cover.id}
-            className="relative rounded-sm shadow-md drop-shadow-md transition-colors duration-200 w-full  border-none"
+            className="relative w-full rounded-sm border-none shadow-md drop-shadow-md transition-colors duration-200"
           >
             <Dialog>
-              <DialogTrigger className="z-10 flex opacity-0 hover:opacity-100 transition-opacity items-center justify-center absolute inset-0 bg-black/50 rounded-sm cursor-pointer">
+              <DialogTrigger className="absolute inset-0 z-10 flex cursor-pointer items-center justify-center rounded-sm bg-black/50 opacity-0 transition-opacity hover:opacity-100">
                 <Expand size={45} color="white" />
               </DialogTrigger>
 
-              <DialogContent className="[&>button]:hidden bg-transparent border-none border-0 shadow-none p-0 w-full h-auto rounded-none! justify-center">
+              <DialogContent className="h-auto w-full justify-center rounded-none! border-0 border-none bg-transparent p-0 shadow-none [&>button]:hidden">
                 <DialogTitle className="hidden"></DialogTitle>
                 <DialogDescription className="hidden"></DialogDescription>
 
                 <DialogClose className="fixed inset-0 z-0 block! cursor-default" />
-                <div className="max-w-[90vw] md:max-w-screen max-h-[90vh] lg:max-h-screen flex justify-center items-center relative z-10">
-                  <div className="absolute bg-secondary p-5 rounded-sm">
+                <div className="relative z-10 flex max-h-[90vh] max-w-[90vw] items-center justify-center md:max-w-screen lg:max-h-screen">
+                  <div className="bg-secondary absolute rounded-sm p-5">
                     <Loader2 className="animate-spin" size={50} />
                   </div>
-                  <img
+                  <Image
                     src={getCoverImageUrl(id, cover.fileName, "full")}
                     alt={`Ảnh bìa ${cover.volume}`}
-                    className="max-h-full max-w-full object-cover z-20"
+                    className="z-20 max-h-full max-w-full object-cover"
                     fetchPriority="high"
                     onError={(e) => {
                       e.currentTarget.src = "/images/xidoco.webp";
                     }}
+                    width={500}
+                    height={500}
                   />
                 </div>
               </DialogContent>
             </Dialog>
 
-            <CardContent className="p-0  w-full">
+            <CardContent className="w-full p-0">
               <LazyLoadImage
                 wrapperClassName={cn(
                   "block! rounded-sm object-cover w-full",
-                  !loaded && "aspect-5/7"
+                  !loaded && "aspect-5/7",
                 )}
                 placeholderSrc="/images/place-doro.webp"
                 className={cn(
-                  "w-full rounded-sm block object-cover aspect-5/7"
+                  "block aspect-5/7 w-full rounded-sm object-cover",
                 )}
                 src={getCoverImageUrl(id, cover.fileName, "512")}
                 alt={`Ảnh bìa tập ${cover.volume}`}
@@ -135,9 +138,9 @@ export default function MangaCoversTab({ id }: MangaCoversTabProps) {
                 //visibleByDefault
               />
             </CardContent>
-            <CardFooter className="absolute bottom-0 p-2 bg-linear-to-t from-black w-full rounded-b-sm dark:rounded-b-none max-h-full items-end">
-              <p className="text-base font-semibold line-clamp-1 break-all hover:line-clamp-none text-white drop-shadow-xs">
-                {!!cover.volume ? `Volume ${cover.volume}` : "No Volume"}
+            <CardFooter className="absolute bottom-0 max-h-full w-full items-end rounded-b-sm bg-linear-to-t from-black p-2 dark:rounded-b-none">
+              <p className="line-clamp-1 text-base font-semibold break-all text-white drop-shadow-xs hover:line-clamp-none">
+                {cover.volume ? `Volume ${cover.volume}` : "No Volume"}
               </p>
             </CardFooter>
           </Card>

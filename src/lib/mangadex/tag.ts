@@ -1,5 +1,5 @@
 import { Manga, Tag, TagsGroup } from "@/types/types";
-import { axiosWithProxyFallback } from "../axios";
+import { axiosWithProxy } from "../axios";
 import { MangaParser } from "./manga";
 
 export function TagsParser(data: any[]): Tag[] {
@@ -13,7 +13,7 @@ export function TagsParser(data: any[]): Tag[] {
 }
 
 export async function getTags(): Promise<Tag[]> {
-  const data = await axiosWithProxyFallback({
+  const data = await axiosWithProxy({
     url: "/manga/tag",
     method: "get",
   });
@@ -54,7 +54,7 @@ export async function getMangasByTag(
   limit: number,
   offset: number,
   language: ("vi" | "en")[],
-  r18: boolean
+  r18: boolean,
 ): Promise<{
   mangas: Manga[];
   total: number;
@@ -74,7 +74,7 @@ export async function getMangasByTag(
     includedTags: [id],
   };
 
-  const data = await axiosWithProxyFallback({
+  const data = await axiosWithProxy({
     url: "/manga",
     method: "get",
     params: searchParams,

@@ -1,38 +1,19 @@
 "use client";
 
-import { useConfig } from "@/hooks/use-config";
-import { getLatestChapters } from "@/lib/mangadex/latest";
-import useSWR from "swr";
 import LatestCard from "./latest-card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import LatestSkeleton from "./latest-skeleton";
+import type { Chapter } from "@/types/types";
 
-export default function LatestUpdate() {
-  const [config] = useConfig();
-  const { data, error, isLoading } = useSWR(
-    [18, config.translatedLanguage, config.r18],
-    ([max, language, r18]) => getLatestChapters(max, language, r18),
-    {
-      refreshInterval: 1000 * 60 * 10,
-    }
-  );
+interface LatestUpdateProps {
+  initialData: Chapter[];
+}
 
-  if (isLoading)
-    return (
-      <div className="flex flex-col">
-        <hr className="w-9 h-1 bg-primary border-none" />
-        <h1 className="text-2xl font-black uppercase">Mới cập nhật</h1>
+export default function LatestUpdate({ initialData }: LatestUpdateProps) {
+  const data = initialData;
 
-        <div className="grid grid-cols-1 gap-3 mt-4 md:grid-cols-2 lg:grid-cols-3">
-          {[...Array(9)].map((_, index) => (
-            <LatestSkeleton key={index} />
-          ))}
-        </div>
-      </div>
-    );
-  if (error || !data) return null;
+  if (!data || data.length === 0) return null;
 
   const [part1, part2, part3] = splitArr(data);
 
@@ -40,7 +21,7 @@ export default function LatestUpdate() {
     <div className="flex flex-col">
       <div className="flex justify-between">
         <div>
-          <hr className="w-9 h-1 bg-primary border-none" />
+          <hr className="bg-primary h-1 w-9 border-none" />
           <h1 className="text-2xl font-black uppercase">Mới cập nhật</h1>
         </div>
 
@@ -51,20 +32,20 @@ export default function LatestUpdate() {
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 gap-3 mt-4 md:grid-cols-2 lg:grid-cols-3">
+      <div className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
         <div className="grid grid-cols-1 gap-3">
           {part1.map((chapter) => (
             <LatestCard key={chapter.id} chapter={chapter} />
           ))}
         </div>
 
-        <div className="hidden md:grid grid-cols-1 gap-3">
+        <div className="hidden grid-cols-1 gap-3 md:grid">
           {part2.map((chapter) => (
             <LatestCard key={chapter.id} chapter={chapter} />
           ))}
         </div>
 
-        <div className="hidden lg:grid grid-cols-1 gap-3">
+        <div className="hidden grid-cols-1 gap-3 lg:grid">
           {part3.map((chapter) => (
             <LatestCard key={chapter.id} chapter={chapter} />
           ))}

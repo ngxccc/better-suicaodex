@@ -14,15 +14,15 @@ export function MainNav() {
   return (
     <Link
       href="/"
-      className="mr-4 flex items-center gap-0.5 justify-start lg:mr-6"
+      className="mr-4 flex items-center justify-start gap-0.5 lg:mr-6"
     >
       <Image
         src={logos.gehenna}
         alt="SuicaoDex's logo"
         className={cn(
-          "max-h-8 w-auto grayscale contrast-150 dark:invert",
+          "max-h-8 w-auto contrast-150 grayscale dark:invert",
           // pathname.includes("/manga") && "invert",
-          !isAtTop && "invert-0 md:invert-0"
+          !isAtTop && "invert-0 md:invert-0",
         )}
         quality={100}
         priority
@@ -33,10 +33,10 @@ export function MainNav() {
         quality={100}
         priority
         className={cn(
-          "max-h-[22px] w-auto drop-shadow-md dark:invert xs:hidden",
+          "xs:hidden max-h-[22px] w-auto drop-shadow-md dark:invert",
           // pathname.includes("/manga") && "invert",
           // pathname.includes("/group/") && "md:invert",
-          !isAtTop && "filter-none md:filter-none"
+          !isAtTop && "filter-none md:filter-none",
         )}
       />
       <Image
@@ -45,10 +45,10 @@ export function MainNav() {
         quality={100}
         priority
         className={cn(
-          "max-h-[22px] w-auto drop-shadow-md dark:invert hidden xs:flex",
+          "xs:flex hidden max-h-[22px] w-auto drop-shadow-md dark:invert",
           // pathname.includes("/manga") && "invert",
           // pathname.includes("/group/") && "md:invert",
-          !isAtTop && "filter-none md:filter-none"
+          !isAtTop && "filter-none md:filter-none",
         )}
       />
     </Link>

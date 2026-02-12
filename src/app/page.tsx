@@ -1,75 +1,53 @@
 import HomePage from "@/components/Pages/Home";
 import { siteConfig } from "@/config/site";
 
-function breadcrumbJsonLd() {
-  return {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      {
-        "@type": "ListItem",
-        position: 1,
-        name: "Trang chủ",
-        item: `${siteConfig.url}`,
-      },
-      {
-        "@type": "ListItem",
-        position: 2,
-        name: "Website đọc truyện chính thức",
-        item: `${siteConfig.url}/latest`,
-      },
-    ],
-  };
-}
-
-function searchActionJsonLd() {
-  return {
-    "@context": "http://schema.org",
-    "@type": "WebSite",
-    url: siteConfig.url,
-    potentialAction: {
-      "@type": "SearchAction",
-      target: `${siteConfig.url}/advanced-search?q={search_term_string}`,
-      "query-input": "required name=search_term_string",
-    },
-  };
-}
-
-function organizationJsonLd() {
-  return {
-    "@context": "http://schema.org",
-    "@type": "Organization",
-    name: siteConfig.name,
-    url: siteConfig.url,
-    logo: `${siteConfig.url}/logo.png`,
-    sameAs: [
-      siteConfig.links.discord,
-      siteConfig.links.github,
-      siteConfig.links.facebook,
-    ],
-  };
-}
-
 export default function Home() {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      // Khai báo Tổ chức (Thương hiệu)
+      {
+        "@type": "Organization",
+        "@id": `${siteConfig.url}/#organization`,
+        name: siteConfig.name,
+        url: siteConfig.url,
+        logo: {
+          "@type": "ImageObject",
+          url: `${siteConfig.url}/logo.png`, // Đảm bảo logo size chuẩn 112x112px trở lên
+        },
+        sameAs: [
+          siteConfig.links.discord,
+          siteConfig.links.github,
+          siteConfig.links.facebook,
+        ].filter(Boolean), // Lọc bỏ link rỗng nếu có
+      },
+      // Khai báo Website & Search Box
+      {
+        "@type": "WebSite",
+        "@id": `${siteConfig.url}/#website`,
+        url: siteConfig.url,
+        name: siteConfig.name,
+        description: siteConfig.description,
+        publisher: {
+          "@id": `${siteConfig.url}/#organization`, // Link ngược lại tổ chức ở trên
+        },
+        potentialAction: {
+          "@type": "SearchAction",
+          target: {
+            "@type": "EntryPoint",
+            urlTemplate: `${siteConfig.url}/advanced-search?q={search_term_string}`,
+          },
+          "query-input": "required name=search_term_string",
+        },
+      },
+    ],
+  };
+
   return (
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(breadcrumbJsonLd()),
-        }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(searchActionJsonLd()),
-        }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(organizationJsonLd()),
-        }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <HomePage />
     </>
